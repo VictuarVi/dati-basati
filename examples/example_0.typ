@@ -2,7 +2,7 @@
 
 #set page(width: auto, height: auto, margin: 1cm)
 
-#import "@preview/dati-basati:0.1.0" as db
+#import "@preview/dati-basati:0.1.1" as db
 
 #set text(font: "Barlow")
 

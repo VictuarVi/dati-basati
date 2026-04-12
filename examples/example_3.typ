@@ -3,7 +3,7 @@
 #set page(width: auto, height: auto, margin: 1cm, fill: rgb("#FFF0C3").lighten(80%))
 
 #import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.0"
+#import "@preview/dati-basati:0.1.1"
 
 #set text(font: "IBM Plex Sans")
 

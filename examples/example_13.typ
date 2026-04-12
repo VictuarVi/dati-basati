@@ -1,7 +1,7 @@
 #set page(width: auto, height: auto, margin: 1cm, fill: rgb("#FFE066").lighten(80%))
 
 #import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.0"
+#import "@preview/dati-basati:0.1.1"
 
 #show: dati-basati.dati-basati.with(
   ..dati-basati.themes.ghibli,

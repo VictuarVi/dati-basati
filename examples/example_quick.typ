@@ -1,6 +1,6 @@
 #set page(height: auto, width: auto, margin: 1cm, fill: rgb("#fff9df"))
 
-#import "@preview/dati-basati:0.1.0" as db
+#import "@preview/dati-basati:0.1.1" as db
 
 #show: db.dati-basati.with(..db.themes.C62-50)
 

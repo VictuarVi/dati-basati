@@ -3,7 +3,7 @@
 #set page(width: auto, height: auto, margin: 1cm)
 
 #import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.0"
+#import "@preview/dati-basati:0.1.1"
 
 #show: dati-basati.dati-basati.with(
   ..dati-basati.themes.C62-50,

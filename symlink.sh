@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 pkg_name="dati-basati"
-version=0.1.0
+version=0.1.1
 
 source=$PWD
 destinations=("$HOME/.cache/typst/packages/preview/$pkg_name/" "$HOME/.local/share/typst/packages/local/$pkg_name/")

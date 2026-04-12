@@ -3,7 +3,7 @@
 #set page(width: auto, height: auto, margin: 1cm, fill: rgb("#002E62").lighten(80%))
 
 #import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.0"
+#import "@preview/dati-basati:0.1.1"
 
 #show: dati-basati.dati-basati.with(
   ..dati-basati.themes.C62-48,

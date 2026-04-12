@@ -13,10 +13,20 @@
 
 #align(
   center,
-  heading(
-    text(size: 1.5em)[`dati-basati` documentation],
-    outlined: false,
-  ),
+  {
+    heading(
+      text(size: 1.5em)[
+        `dati-basati` documentation
+      ],
+      outlined: false,
+    )
+    parbreak()
+    text(
+      size: 1.2em,
+      style: "italic",
+      "Version " + toml("../typst.toml").package.version,
+    )
+  },
 )
 
 #set heading(numbering: none)

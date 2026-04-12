@@ -1,6 +1,6 @@
 # Dati basati
 
-![Version](https://img.shields.io/badge/package-v0.1.0-239dad?logo=typst)
+![Version](https://img.shields.io/badge/package-v0.1.1-239dad?logo=typst)
 [![Github Repo](https://img.shields.io/badge/github-repo-blue?logo=github)](https://github.com/victuarvi/dati-basati.git)
 ![License](https://img.shields.io/badge/license-GPLv3-green)
 [![Manual](https://img.shields.io/badge/docs-manual.pdf-red?logo=readthedocs)](docs/manual.pdf?raw=true)
@@ -12,16 +12,16 @@ _Dati basati_ ("_Based Data_" in Italian) is a [Typst](https://typst.app/) packa
 
 See the `/docs` directory for the [manual](/docs/manual.pdf) and the [documentation](/docs/docs.pdf).
 
-# Usage 🖋
+## Usage 🖋
 
 See [this](/examples/example_quick.typ) for a quick start. You need to import the package into your project:
 
 ```typ
-#import "@preview/dati-basati:0.1.0" as db
+#import "@preview/dati-basati:0.1.1" as db
 ```
 
 <p align="center">
-  <img src="thumbnails/example_0.png"/>
+  <img src="thumbnails/example_0.png" alt="basic dati-basati er diagram example with tiw theme"/>
 </p>
 <details>
   <summary>See the source code</summary>
@@ -31,7 +31,7 @@ See [this](/examples/example_quick.typ) for a quick start. You need to import th
 
 #set page(width: auto, height: auto, margin: 1cm)
 
-#import "@preview/dati-basati:0.1.0" as db
+#import "@preview/dati-basati:0.1.1" as db
 
 #set text(font: "Barlow")
 
@@ -135,7 +135,7 @@ See [this](/examples/example_quick.typ) for a quick start. You need to import th
 ```
 </details>
 
-# Showcase ✨
+## Showcase ✨
 
 If you click on the images you can check the source code.
 <!--
@@ -179,42 +179,41 @@ If you click on the images you can check the source code.
 </table> -->
 
 <p align="center">
-  <a href="/examples/example_12.typ"><img alt="" src="thumbnails/example_12.png"></a>
+  <a href="/examples/example_12.typ"><img alt="dati basati er diagram example for C62-48 theme" src="thumbnails/example_12.png"></a>
   <!-- <div align="center"><em>C62-48</em></div> -->
 </p>
 
 <p align="center">
-  <a href="/examples/example_7.typ"><img alt="" src="thumbnails/example_7.png"></a>
+  <a href="/examples/example_7.typ"><img alt="dati basati er diagram example for tiramisu theme" src="thumbnails/example_7.png"></a>
   <!-- <div align="center"><em>Tiramisu</em></div> -->
 </p>
 
 <p align="center">
-  <a href="/examples/example_14.typ"><img alt="" src="thumbnails/example_14.png"></a>
+  <a href="/examples/example_14.typ"><img alt="dati basati er diagram example for ghibli theme" src="thumbnails/example_14.png"></a>
   <!-- <div align="center"><em>Ghibli</em></div> -->
 </p>
 
 <p align="center">
-  <a href="/examples/example_9.typ"><img alt="" src="thumbnails/example_9.png"></a>
+  <a href="/examples/example_9.typ"><img alt="dati basati er diagram example for C62-50 theme" src="thumbnails/example_9.png"></a>
   <!-- <div align="center"><em>C62-50</em></div> -->
 </p>
 <p align="center">
-  <a href="/examples/example_10.typ"><img alt="" src="thumbnails/example_10.png"></a>
+  <a href="/examples/example_10.typ"><img alt="dati basati er diagram example for polimi theme" src="thumbnails/example_10.png"></a>
   <!-- <div align="center"><em>Polimi</em></div> -->
 </p>
 
 <p align="center">
-  <a href="/examples/example_11.typ"><img alt="" src="thumbnails/example_11.png"></a>
+  <a href="/examples/example_11.typ"><img alt="dati basati er diagram example for futurama theme" src="thumbnails/example_11.png"></a>
   <!-- <div align="center"><em>Futurama</em></div> -->
 </p>
 
 See the [examples](/examples) directory for many exceptions and particular cases. Note that those files serve the _only_ purpose to illustrate how the package works: as such, they may contain errors and are NOT intended to be applied for database development.
 
-# Roadmap 📝
+## Roadmap 📝
 
-- Type checking using [valkyrie](https://typst.app/universe/package/valkyrie)
 - Better options coordination (in order to avoid visual errors)
 - Local theming as opposed to the current global one
 
-# Contributing 🚀
+## Contributing 🚀
 
 If you happen to have suggestions, ideas or anything else feel free to open issues and pull requests or contact me.

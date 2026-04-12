@@ -7,6 +7,7 @@
 #import "custom-marks.typ"
 #import "utils.typ": *
 #import "themes.typ": themes
+#import "model.typ": *
 
 #let default-settings = (
   fill: (
@@ -110,6 +111,19 @@
   misc: (:),
   body,
 ) = {
+  _ = z.parse(
+    (
+      fill: fill,
+      stroke: stroke,
+      radius: radius,
+      spacing: spacing,
+      text: text,
+      attributes-position: attributes-position,
+      misc: misc,
+    ),
+    settings-schema,
+  )
+
   default-settings-state.update(s => {
     let old = s
 
@@ -192,7 +206,7 @@
   label: "Entity",
   /// Attributes of the entity (e.g. id, name, surname, address...).
   /// -> dictionary
-  attributes: (),
+  attributes: (:),
   /// Fine tune positioning of attributes.
   /// -> dictionary
   attributes-position: (:),
@@ -213,6 +227,20 @@
   /// -> args
   ..args,
 ) = {
+  _ = z.parse(
+    (
+      coordinates: coordinates,
+      name: name,
+      label: label,
+      attributes: attributes,
+      attributes-position: attributes-position,
+      primary-key: primary-key,
+      weak-entity: weak-entity,
+      misc: misc,
+    ),
+    entity-schema,
+  )
+
   let is-multiple-pk = type(primary-key) == array and primary-key.len() > 1
   let is-single-array = type(primary-key) == array and primary-key.len() == 1
 
@@ -386,6 +414,15 @@
   /// -> array
   subentities: ("",),
 ) = {
+  _ = z.parse(
+    (
+      hierarchy: hierarchy,
+      entity: entity,
+      subentities: subentities,
+    ),
+    subentities-schema,
+  )
+
   let entity-position-dict = (
     // (to get meeting point, lines from subentities)
     "north": ("-|", "|-"),
@@ -488,7 +525,17 @@
   /// -> array
   cardinality: (),
 ) = {
-  assert(cardinality.len() == 2, message: "You need to specify the cardinality.")
+  _ = z.parse(
+    (
+      coordinates: coordinates,
+      entities: entities,
+      name: name,
+      label: label,
+      attributes: attributes,
+      cardinality: cardinality,
+    ),
+    relation-schema,
+  )
 
   if coordinates == none {
     hide({ line(..entities, name: "tmp") })

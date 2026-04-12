@@ -3,7 +3,7 @@
 #set page(width: auto, height: auto, margin: 1cm, fill: rgb("#D4E2E8"))
 
 #import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.0"
+#import "@preview/dati-basati:0.1.1"
 
 #set text(font: "Manrope")
 
@@ -93,28 +93,22 @@
 
 #let relations = (
   "partita_di_calcio-annotazione": (
-    // coordinates: (0, -5),
     entities: ("partita_di_calcio", "annotazione"),
     label: "ha",
     name: "partita_di_calcio-annotazione",
     cardinality: ("(0,n)", "(1,1)"),
   ),
   "visione-evento": (
-    // coordinates: (0, -5),
     entities: ("visione", "evento"),
-    // label: "",
     name: "visione-evento",
     cardinality: ("(1,1)", "(0,n)"),
   ),
   "visione-utente": (
-    // coordinates: (0, -5),
     entities: ("visione", "utente"),
-    // label: "",
     name: "visione-utente",
     cardinality: ("(1,1)", "(0,n)"),
   ),
   "pagamento-utente": (
-    // coordinates: (0, -5),
     entities: ("pagamento", "utente"),
     label: ("effettua", "north"),
     name: "pagamento-utente",

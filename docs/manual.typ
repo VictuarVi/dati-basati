@@ -1,4 +1,4 @@
-#import "@preview/dati-basati:0.1.0"
+#import "@preview/dati-basati:0.1.1"
 #import "@preview/zebraw:0.6.1": *
 #import "@preview/catppuccin:1.0.1": *
 #import "@preview/gentle-clues:1.3.0": *
@@ -103,17 +103,17 @@ Depending on your needs there are different types of imports:
 
 - Import _all_ the functions (recommended#footnote("Since it's unlikely there will be conflicts with identically named functions.")):
   ```typ
-  #import "@preview/dati-basati:0.1.0": *
+  #import "@preview/dati-basati:0.1.1": *
   ```
 
 - Import _only_ the functions you want to use:
   ```typ
-  #import "@preview/dati-basati:0.1.0": er-diagram, entity, relation
+  #import "@preview/dati-basati:0.1.1": er-diagram, entity, relation
   ```
 
 - Import and (optionally) rename:
   ```typ
-  #import "@preview/dati-basati:0.1.0" as renamed
+  #import "@preview/dati-basati:0.1.1" as renamed
   ```
   but your code would be more verbose, like in the following example:
 
@@ -732,7 +732,7 @@ Combined:
 
 The package provides an handful of themes you can use by importing the corresponding module and applying the show rule:
 ```typ
-#import "@preview/dati-basati:0.1.0" as db
+#import "@preview/dati-basati:0.1.1" as db
 #show: db.with(..db.themes.at("theme-name"))
 ```
 Currently the themes are:
@@ -824,13 +824,13 @@ The theme schema is as follows:
 
 You can override single settings:
 ```typ
-#import "@preview/dati-basati:0.1.0" as db
+#import "@preview/dati-basati:0.1.1" as db
 #show: db.with(..db.themes.at("theme-name"),entities: (fill: green))
 ```
 
 Or create new themes following the schema:
 ```typ
-#import "@preview/dati-basati:0.1.0" as db
+#import "@preview/dati-basati:0.1.1" as db
 #import "@preview/catppuccin:1.0.1": *
 #let palette = flavors.latte.colors
 #show: db.with(

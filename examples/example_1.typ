@@ -2,7 +2,7 @@
 
 #set page(width: auto, height: auto, margin: 1cm)
 
-#import "@preview/dati-basati:0.1.0"
+#import "@preview/dati-basati:0.1.1"
 
 #import "@preview/catppuccin:1.0.1": *
 #show: catppuccin.with(flavors.latte)
@@ -103,7 +103,7 @@
   "lezione": (
     coordinates: (22, 0),
     attributes: (
-      "south": ("numero", "data").rev(),
+      "south": ("numero", "data"),
     ),
     attributes-position: (
       south: (
@@ -223,7 +223,7 @@
     entities: ("insegnante", "turno"),
     // label: ("acquista", "south"),
     name: "insegnante-turno",
-    cardinality: ("(1,n)", "(1.1)"),
+    cardinality: ("(1,n)", "(1,1)"),
   ),
   "iscrizione-turno": (
     coordinates: (21, 4),
@@ -300,7 +300,7 @@
   }
 
   dati-basati.subentities(
-    hierarchy: "(t,s)",
+    hierarchy: "(t,e)",
     entity: "insegnante",
     subentities: ("nuoto", "fitness"),
   )
