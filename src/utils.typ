@@ -280,9 +280,9 @@
 /// Retrieve the side based on diagonal anchors.
 /// -> str
 #let get-diagonal-side(coord, name, ctx) = {
-  let (ctx, f) = cetz.coordinate.resolve(ctx, coord)
-  let (ctx, nw) = cetz.coordinate.resolve(ctx, name + "-diagonal-north-west")
-  let (ctx, ne) = cetz.coordinate.resolve(ctx, name + "-diagonal-north-east")
+  let (.., f) = cetz.coordinate.resolve(ctx, coord)
+  let (.., nw) = cetz.coordinate.resolve(ctx, name + "-diagonal-north-west")
+  let (.., ne) = cetz.coordinate.resolve(ctx, name + "-diagonal-north-east")
 
   let (f_x, f_y) = f.slice(0, 2)
   let (nw_x, nw_y) = nw.slice(0, 2)
@@ -301,4 +301,13 @@
       "east"
     }
   }
+}
+
+/// Return whether two elements are on the same axis.
+/// -> bool
+#let is-same-axis(center, other, ctx) = {
+  let (x1, y1) = cetz.coordinate.resolve(ctx, center).at(1).slice(0, 2)
+  let (x2, y2) = cetz.coordinate.resolve(ctx, other).at(1).slice(0, 2)
+
+  return x1 == x2 or y1 == y2
 }

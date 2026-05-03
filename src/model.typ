@@ -20,37 +20,46 @@
   },
 )
 
+// LIST OF ALLOWED VALUES
+
+#let choices = (
+  cardinalities: (
+    "(0,1)",
+    "(0,n)",
+    "(0,N)",
+    "(1,0)",
+    "(1,1)",
+    "(1,n)",
+    "(1,N)",
+    "(n,0)",
+    "(n,1)",
+    "(n,n)",
+    "(N,0)",
+    "(N,1)",
+    "(N,N)",
+  ),
+  subentities: ("(t,e)", "(p,e)", "(p,o)"),
+  directions: ("ltr", "rtl"),
+  start: ("from-long", "from-short"),
+)
+
 // CUSTOM TYPES
 
 #let position-type = z.dictionary(
   optional: true,
   (
     alignment: z.alignment(optional: true),
-    dir: z.string(
+    dir: z.choice(
       optional: true,
-      post-transform: (self, it) => {
-        if (it != none) {
-          let dir-values = ("ltr", "rtl")
-          assert(
-            it in dir-values,
-            message: "Direction must be either " + dir-values.join(" or ") + ".",
-          )
-        }
-        return it
-      },
+      description: "Drawing direction for attributes",
+      name: "direction",
+      choices.directions,
     ),
-    start: z.string(
+    start: z.choice(
       optional: true,
-      post-transform: (self, it) => {
-        if (it != none) {
-          let start-values = ("from-short", "from-long")
-          assert(
-            it in start-values,
-            message: "Start must be either " + start-values.join(" or ") + ".",
-          )
-        }
-        return it
-      },
+      description: "Starting drawing direction for attributes",
+      name: "start",
+      choices.start,
     ),
   ),
 )
@@ -128,12 +137,16 @@
 ))
 
 #let subentities-schema = z.dictionary((
-  hierarchy: string-value(
+  hierarchy: z.choice(
+    description: "Subentities hierarchy",
+    choices.subentities,
     default: "(t,e)",
-    values: ("(t,e)", "(p,e)", "(p,o)"),
   ),
   entity: z.string(),
-  subentities: z.array(z.string(), default: ("",)),
+  subentities: z.array(
+    z.string(),
+    assertions: (z.assert.length.min(1),),
+  ),
 ))
 
 #let relation-schema = z.dictionary((
@@ -143,15 +156,16 @@
       z.integer(),
       z.floating-point(),
     ),
-    post-transform: (self, it) => {
-      if (it != none and it.len() != 0) {
-        assert(
-          it.len() == 2,
-          message: "Coordinates length must be two.",
-        )
-      }
-      return it
-    },
+    // assertions: (z.assert.length.equals(2),),
+    // post-transform: (self, it) => {
+    //   if (it != none and it.len() != 0) {
+    //     assert(
+    //       it.len() == 2,
+    //       message: "Coordinates length must be two.",
+    //     )
+    //   }
+    //   return it
+    // },
   ),
   entities: z.either(
     // ((str, str), (str, str), ...)
@@ -181,29 +195,16 @@
   ),
   attributes: attributes-type,
   cardinality: z.array(
-    z.string(),
+    z.choice(
+      description: "Cardinality of the first entity",
+      name: "Invalid cardinality",
+      choices.cardinalities,
+    ),
     default: ("(n,n)", "(n,n)"),
-    post-transform: (self, it) => {
-      assert(
-        it.len() == 2,
-        message: "Length must be equal to 2.",
-      )
-      let values = (
-        "(0,1)",
-        "(0,n)",
-        "(1,0)",
-        "(1,1)",
-        "(1,n)",
-        "(n,0)",
-        "(n,1)",
-        "(n,n)",
-      )
-      assert(
-        it.map(e => e in values).filter(e => e == false).len() == 0,
-        message: "Values must be in " + values.join(", ") + ".",
-      )
-      return it
-    },
+  ),
+  intersect: z.boolean(
+    optional: true,
+    default: false,
   ),
 ))
 

@@ -458,7 +458,7 @@ A more complex layout:
 === Attributes positioning<attributes-positioning>
 
 Depending on what you are trying to achieve, the default placement could be wrong -- you can modify if with `attributes-position`:
-```
+```typ
 attributes-position: (
   side: (
     alignment: left | center | right,

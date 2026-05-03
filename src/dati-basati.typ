@@ -524,6 +524,10 @@
   /// Cardinality of the given relation:
   /// -> array
   cardinality: (),
+  /// Whether to intersect the lines connecting relations instead of a direct
+  /// connection.
+  /// -> bool
+  intersect: false,
 ) = {
   _ = z.parse(
     (
@@ -533,6 +537,7 @@
       label: label,
       attributes: attributes,
       cardinality: cardinality,
+      intersect: intersect,
     ),
     relation-schema,
   )
@@ -600,13 +605,19 @@
         ),
       ),
     )
+  })
 
+  get-ctx(ctx => {
     if not is-same-entity {
       for i in range(0, entities.len()) {
         let coordinate-start = if is-array { label.at(0) } else { label }
+        let arr = (entities.at(i),)
+        if (intersect and not is-same-axis(entities.at(i), name, ctx)) {
+          arr.push((entities.at(i), "-|", name))
+        }
+        arr.push(name)
         line(
-          entities.at(i),
-          name,
+          ..arr,
           name: coordinate-start + "-" + entities.at(i),
         )
         _draw-cardinality-box(
