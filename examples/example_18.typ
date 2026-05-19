@@ -1,11 +1,12 @@
-#set page(width: auto, height: auto, margin: 1cm, fill: rgb("#FFE066").lighten(80%))
+// tiw 2
 
-#import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.1"
+#set page(width: auto, height: auto, margin: 1cm)
 
-#show: dati-basati.dati-basati.with(
-  ..dati-basati.themes.ghibli,
-)
+#import "@preview/dati-basati:0.1.1" as db
+
+#set text(font: "Barlow")
+
+#show: db.dati-basati.with(..db.themes.tiw)
 
 #let entities = (
   "user": (
@@ -15,7 +16,7 @@
       "west": ("password", "name", "surname"),
     ),
     primary-key: "username",
-    label: "USER",
+    label: "user",
     name: "user",
   ),
   "supplier": (
@@ -25,7 +26,7 @@
   ),
   "client": (
     coordinates: (0, -16),
-    label: "CLIENT",
+    label: "client",
     name: "client",
   ),
   "product": (
@@ -56,7 +57,7 @@
       "east": ("id", "date"),
     ),
     primary-key: ("id",),
-    label: "CONFIGURATION",
+    label: "configuration",
     name: "configuration",
   ),
   "sku": (
@@ -64,6 +65,7 @@
     attributes: (
       "south": ("code", "price", "name", "photo_path", "description"),
     ),
+    attributes-position: (south: (alignment: center)),
     primary-key: ("code",),
     label: "  SKU  ",
     name: "sku",
@@ -71,43 +73,43 @@
 )
 
 #let relations = (
-  "Definition": (
+  "supplies-composite": (
     // coordinates: (4, 9),
     entities: ("supplier", "composite"),
     label: "defines",
     name: "supplier-composite",
     cardinality: ("(1,n)", "(1,n)"),
   ),
-  "creation": (
+  "supplier-sku": (
     // coordinates: (4, 12),
     entities: ("supplier", "sku"),
     label: "creates",
     name: "supplier-sku",
     cardinality: ("(1,n)", "(1,1)"),
   ),
-  "Making": (
+  "client-configuration": (
     // coordinates: (-4, 7),
     entities: ("client", "configuration"),
     label: "makes",
     name: "client-configuration",
     cardinality: ("(1,n)", "(1,1)"),
   ),
-  "selection": (
+  "configuration-sku": (
     coordinates: (12.5, -12),
     entities: ("configuration", "sku"),
     label: "selects",
     name: "configuration-sku",
     cardinality: ("(1,n)", "(0,n)"),
   ),
-  "Belonging": (
-    coordinates: (-4, -2),
+  "product-composite": (
+    coordinates: (-4, -4),
     intersect: true,
     entities: ("product", "composite"),
     label: "belongs",
     name: "product-composite",
     cardinality: ("(0,1)", "(1,n)"),
   ),
-  "compatibility": (
+  "sku-simple": (
     // coordinates: (15, 15),
     entities: ("sku", "simple"),
     label: "compatible",
@@ -116,9 +118,9 @@
   ),
 )
 
-#dati-basati.er-diagram({
+#db.er-diagram({
   for entity in entities.values() {
-    dati-basati.entity(
+    db.entity(
       entity.coordinates,
       label: entity.label,
       name: entity.name,
@@ -129,7 +131,7 @@
   }
 
   for relation in relations.values() {
-    dati-basati.relation(
+    db.relation(
       coordinates: relation.at("coordinates", default: none),
       entities: relation.entities,
       label: relation.at("label", default: none),
@@ -139,13 +141,13 @@
     )
   }
 
-  dati-basati.subentities(
+  db.subentities(
     hierarchy: "(t,e)",
     entity: "user",
     subentities: ("supplier", "client"),
   )
 
-  dati-basati.subentities(
+  db.subentities(
     hierarchy: "(t,e)",
     entity: "product",
     subentities: ("composite", "simple"),

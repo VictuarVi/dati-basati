@@ -1,4 +1,4 @@
-#import "@preview/dati-basati:0.1.1"
+#import "@preview/dati-basati:0.1.1" as db
 #import "@preview/zebraw:0.6.1": *
 #import "@preview/catppuccin:1.0.1": *
 #import "@preview/gentle-clues:1.3.0": *
@@ -48,11 +48,10 @@
       eval(
         mode: "markup",
         scope: (
-          dati-basati: dati-basati,
-          er-diagram: dati-basati.er-diagram,
-          entity: dati-basati.entity,
-          subentities: dati-basati.subentities,
-          relation: dati-basati.relation,
+          er-diagram: db.er-diagram,
+          entity: db.entity,
+          subentities: db.subentities,
+          relation: db.relation,
         ),
         code.text,
       ),
@@ -455,6 +454,76 @@ A more complex layout:
 //   ```,
 // )
 
+If you need a relation between an entity and one of its subentities you can do so via the `intersect` argument:
+// #fun(
+//   ```typ
+//   #er-diagram({
+//     entity(
+//       (0, 0),
+//       label: "belt",
+//       name: "belt",
+//     )
+//     entity(
+//       (0, -3),
+//       label: "complex",
+//       name: "complex",
+//     )
+//     entity(
+//       (4, -3),
+//       label: "simple",
+//       name: "simple",
+//     )
+//     relation(
+//       coordinates: (-4, -1.5),
+//       intersect: true,
+//       entities: ("belt", "complex"),
+//       label: "belongs",
+//       name: "belt-complex",
+//       cardinality: ("(0,1)", "(1,n)"),
+//     )
+//     subentities(
+//       hierarchy: "(t,e)",
+//       entity: "belt",
+//       subentities: ("complex", "simple"),
+//     )
+//   })
+//   ```,
+// )
+#fun(
+  ```typ
+  #er-diagram({
+    entity(
+      (0, 0),
+      label: "belt",
+      name: "belt",
+    )
+    entity(
+      (5, 0),
+      label: "complex",
+      name: "complex",
+    )
+    entity(
+      (5, -3),
+      label: "simple",
+      name: "simple",
+    )
+    relation(
+      coordinates: (2.5, 3),
+      intersect: true,
+      entities: ("belt", "complex"),
+      label: "belongs",
+      name: "belt-complex",
+      cardinality: ("(0,1)", "(1,n)"),
+    )
+    subentities(
+      hierarchy: "(t,e)",
+      entity: "belt",
+      subentities: ("complex", "simple"),
+    )
+  })
+  ```,
+)
+
 === Attributes positioning<attributes-positioning>
 
 Depending on what you are trying to achieve, the default placement could be wrong -- you can modify if with `attributes-position`:
@@ -737,7 +806,7 @@ The package provides an handful of themes you can use by importing the correspon
 ```
 Currently the themes are:
 #context {
-  let themes = list(..dati-basati.themes.keys())
+  let themes = list(..db.themes.keys())
   block(
     height: measure(themes).height / 2.7,
     columns(3, themes),
@@ -877,6 +946,41 @@ There are plenty of examples with each and every theme -- and corresponding sour
 
   In the future, the theming settings could be implemented per `er-diagram`.
 ]
+
+#pagebreak()
+
+== Individual styling overrides
+
+At the start of the document the user is able to declare the global styling arguments, however there can be the need to individually override elements:
+
+#fun(
+  ```typ
+  #er-diagram({
+    entity(
+      (0, 0),
+      name: "user",
+      label: "user",
+      fill: red.lighten(70%),
+      stroke: red,
+    )
+    entity(
+      (4, -4),
+      name: "subscription",
+      label: "subscription",
+      fill: orange.lighten(70%),
+      stroke: orange,
+    )
+    relation(
+      coordinates: (4,0),
+      label: ("purchases", "south-west"),
+      entities: ("user", "subscription"),
+      cardinality: ("(1,n)", "(1,1)"),
+      fill: yellow.lighten(70%),
+      stroke: yellow
+    )
+  })
+  ```,
+)
 
 = Advanced usage
 
@@ -1062,6 +1166,27 @@ For some reason, you might need to create a weak entity that involves two entiti
 )
 
 Also do note carriage _is the first entity to be drawn_.
+
+== Touying integration
+
+Since the package is based on #link("https://github.com/cetz-package/cetz", "CeTZ"), you can pause the animations as you would do directly with CeTZ via #link("https://touying-typ.github.io/docs/reference/core/touying-reducer", "touying-reducer"):
+
+```typ
+#import "@preview/dati-basati:0.1.1" as db
+#import "@preview/cetz:0.5.2"
+#import "@preview/touying:0.7.3": *
+
+#let db-er-diagram = touying-reducer.with(
+  reduce: db.er-diagram,
+  cover: cetz.draw.hide.with(bounds: true),
+)
+
+#db-er-diagram({
+  entity(...)
+  (pause,)
+  entity(...)
+})
+```
 
 #metadata(none)<_manual-end>
 

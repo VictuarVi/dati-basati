@@ -1,12 +1,11 @@
 #set page(width: auto, height: auto, margin: 1cm)
 
-#import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.1"
+#import "@preview/dati-basati:0.1.1" as db
 
 #set text(font: "Titillium Web")
 
-#show: dati-basati.dati-basati.with(
-  ..dati-basati.themes.snow,
+#show: db.dati-basati.with(
+  ..db.themes.snow,
   text: (
     entities: l => text(size: 1.2em, weight: "bold", upper(l)),
   ),
@@ -110,9 +109,9 @@
   ),
 )
 
-#dati-basati.er-diagram({
+#db.er-diagram({
   for entity in entities.values() {
-    dati-basati.entity(
+    db.entity(
       entity.coordinates,
       label: entity.at("label", default: none),
       name: entity.name,
@@ -124,7 +123,7 @@
   }
 
   for relation in relations.values() {
-    dati-basati.relation(
+    db.relation(
       coordinates: relation.at("coordinates", default: none),
       entities: relation.entities,
       label: relation.at("label", default: none),
@@ -134,7 +133,7 @@
     )
   }
 
-  dati-basati.subentities(
+  db.subentities(
     entity: "student",
     hierarchy: "(p,o)",
     subentities: ("seller", "buyer"),

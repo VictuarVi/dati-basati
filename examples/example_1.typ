@@ -2,7 +2,7 @@
 
 #set page(width: auto, height: auto, margin: 1cm)
 
-#import "@preview/dati-basati:0.1.1"
+#import "@preview/dati-basati:0.1.1" as db
 
 #import "@preview/catppuccin:1.0.1": *
 #show: catppuccin.with(flavors.latte)
@@ -11,7 +11,7 @@
 
 #set text(font: "Fira Sans")
 
-#show: dati-basati.dati-basati.with(
+#show: db.dati-basati.with(
   fill: (
     cardinality: palette.flamingo.rgb,
     entities: palette.red.rgb,
@@ -274,9 +274,9 @@
   ),
 )
 
-#dati-basati.er-diagram({
+#db.er-diagram({
   for entity in entities.values() {
-    dati-basati.entity(
+    db.entity(
       entity.coordinates,
       label: entity.label,
       name: entity.name,
@@ -289,7 +289,7 @@
   }
 
   for relation in relations.values() {
-    dati-basati.relation(
+    db.relation(
       coordinates: relation.at("coordinates", default: none),
       entities: relation.entities,
       label: relation.at("label", default: none),
@@ -299,7 +299,7 @@
     )
   }
 
-  dati-basati.subentities(
+  db.subentities(
     hierarchy: "(t,e)",
     entity: "insegnante",
     subentities: ("nuoto", "fitness"),

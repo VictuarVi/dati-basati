@@ -1,10 +1,9 @@
 #set page(width: auto, height: auto, margin: 1cm, fill: rgb("#FFE066").lighten(80%))
 
-#import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.1"
+#import "@preview/dati-basati:0.1.1" as db
 
-#show: dati-basati.dati-basati.with(
-  ..dati-basati.themes.ghibli,
+#show: db.dati-basati.with(
+  ..db.themes.ghibli,
 )
 
 #let quality = ("height", "width", "audio", "video")
@@ -115,9 +114,9 @@
   ),
 )
 
-#dati-basati.er-diagram({
+#db.er-diagram({
   for entity in entities.values() {
-    dati-basati.entity(
+    db.entity(
       entity.coordinates,
       label: entity.label,
       name: entity.name,
@@ -129,7 +128,7 @@
   }
 
   for relation in relations.values() {
-    dati-basati.relation(
+    db.relation(
       coordinates: relation.at("coordinates", default: none),
       entities: relation.entities,
       label: relation.at("label", default: none),

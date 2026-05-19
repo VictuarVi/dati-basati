@@ -11,6 +11,7 @@
 
 - Type safety handling with [valkyrie](https://typst.app/universe/package/valkyrie)
 - Better intersection drawing between relations with `intersecate: true` (see [`example_18`](/examples/example_18.typ))
+- Fixed args overrides
 
 ## [0.1.0] - 2026-03-15
 

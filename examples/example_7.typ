@@ -2,13 +2,12 @@
 
 #set page(width: auto, height: auto, margin: 1cm, fill: rgb("#fffcf3"))
 
-#import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.1"
+#import "@preview/dati-basati:0.1.1" as db
 
 #set text(font: "IBM Plex Sans")
 
-#show: dati-basati.dati-basati.with(
-  ..dati-basati.themes.tiramisu,
+#show: db.dati-basati.with(
+  ..db.themes.tiramisu,
   text: (
     entities: l => pad(x: 0.1em, (
       text(
@@ -191,9 +190,9 @@
   ),
 )
 
-#dati-basati.er-diagram({
+#db.er-diagram({
   for entity in entities.values() {
-    dati-basati.entity(
+    db.entity(
       entity.coordinates,
       label: entity.label,
       name: entity.name,
@@ -206,7 +205,7 @@
   }
 
   for relation in relations.values() {
-    dati-basati.relation(
+    db.relation(
       coordinates: relation.coordinates,
       entities: relation.entities,
       label: relation.at("label", default: none),
@@ -216,7 +215,7 @@
     )
   }
 
-  dati-basati.subentities(
+  db.subentities(
     hierarchy: "(t,e)",
     entity: "ordine",
     subentities: ("processato", "non_processato"),

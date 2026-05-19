@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.4.2"
+#import "@preview/cetz:0.5.2"
 #import cetz.draw: *
 
 /// Given a value from an array, find its key.
@@ -146,7 +146,7 @@
 }
 
 /// Return where is *center with respects to other*.
-/// -> arrayay
+/// -> string
 #let get-rel-position(center, other, ctx) = {
   let (.., a1) = cetz.coordinate.resolve(ctx, center)
   let (.., a2) = cetz.coordinate.resolve(ctx, other)
@@ -172,7 +172,7 @@
 }
 
 /// Return where is *other with respects to center*, in CW direction.
-/// -> arrayay
+/// -> array
 #let get-rel-position-diagonal(center, other, ctx) = {
   let (.., a1) = cetz.coordinate.resolve(ctx, center)
   let (.., a2) = cetz.coordinate.resolve(ctx, other)
@@ -205,9 +205,9 @@
 }
 
 
-/// Return where *center is with respects to first- and last-sub*.
-/// -> str
-#let get-rel-subentity(center, subentities, ctx) = {
+/// Return where *center is with respects to multiple entities*.
+/// -> string
+#let get-rel-entities(center, subentities, ctx) = {
   let (x, y) = cetz.coordinate.resolve(ctx, center).at(1).slice(0, 2)
   let (x1, y1) = cetz.coordinate.resolve(ctx, subentities.first()).at(1).slice(0, 2)
 

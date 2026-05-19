@@ -1,11 +1,10 @@
 #set page(width: auto, height: auto, margin: 1cm, fill: rgb("#dde9f4"))
 
-#import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.1"
+#import "@preview/dati-basati:0.1.1" as db
 
 #set text(font: "Titillium Web")
 
-#show: dati-basati.dati-basati.with(
+#show: db.dati-basati.with(
   fill: (
     entities: rgb("#0f84eb"),
     relations: rgb("#ffd690"),
@@ -110,13 +109,9 @@
   ),
 )
 
-#dati-basati.er-diagram({
-  import cetz.draw: *
-  // for (k, v) in entities { anchor(k, v.coordinates) }
-  // for (k, v) in relations { anchor(k, v.coordinates) }
-
+#db.er-diagram({
   for entity in entities.values() {
-    dati-basati.entity(
+    db.entity(
       entity.coordinates,
       label: entity.at("label", default: none),
       name: entity.name,
@@ -128,7 +123,7 @@
   }
 
   for relation in relations.values() {
-    dati-basati.relation(
+    db.relation(
       coordinates: relation.at("coordinates", default: none),
       entities: relation.entities,
       label: relation.at("label", default: none),
@@ -138,7 +133,7 @@
     )
   }
 
-  dati-basati.subentities(
+  db.subentities(
     entity: "student",
     hierarchy: "(p,o)",
     subentities: ("seller", "buyer"),

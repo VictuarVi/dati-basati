@@ -2,13 +2,12 @@
 
 #set page(width: auto, height: auto, margin: 1cm, fill: rgb("#FFF0C3").lighten(80%))
 
-#import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.1"
+#import "@preview/dati-basati:0.1.1" as db
 
 #set text(font: "IBM Plex Sans")
 
-#show: dati-basati.dati-basati.with(
-  ..dati-basati.themes.tiramisu,
+#show: db.dati-basati.with(
+  ..db.themes.tiramisu,
   text: (
     entities: l => pad(x: 0.1em, (
       text(
@@ -194,9 +193,9 @@
   ),
 )
 
-#dati-basati.er-diagram({
+#db.er-diagram({
   for entity in entities.values() {
-    dati-basati.entity(
+    db.entity(
       entity.coordinates,
       label: entity.label,
       name: entity.name,
@@ -208,7 +207,7 @@
   }
 
   for relation in relations.values() {
-    dati-basati.relation(
+    db.relation(
       entities: relation.entities,
       name: relation.name,
       cardinality: relation.cardinality,
@@ -218,12 +217,12 @@
     )
   }
 
-  dati-basati.subentities(
+  db.subentities(
     entity: "prenotazione",
     subentities: ("prenotazione_tavolo", "prenotazione_pasto").rev(),
   )
 
-  dati-basati.subentities(
+  db.subentities(
     entity: "prenotazione_pasto",
     subentities: ("prenotazione_asporto", "prenotazione_domicilio"),
   )

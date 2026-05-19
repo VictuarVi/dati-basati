@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.4.2"
+#import "@preview/cetz:0.5.2"
 #import cetz.draw: *
 #import "entity.typ": *
 #import "attributes.typ": *
@@ -244,7 +244,7 @@
   let is-multiple-pk = type(primary-key) == array and primary-key.len() > 1
   let is-single-array = type(primary-key) == array and primary-key.len() == 1
 
-  _draw-entity-box(coordinates, label, name, weak-entity != none, args)
+  _draw-entity-box(coordinates, label, name, weak-entity != none, ..args)
 
   // draw attributes and single primary key
   if attributes != none {
@@ -432,7 +432,7 @@
   )
 
   get-ctx(ctx => {
-    let entity-position = utils.get-rel-subentity(entity, subentities, ctx)
+    let entity-position = utils.get-rel-entities(entity, subentities, ctx)
     let opposite-cardinal = get-opp-cardinal(entity-position)
     let intersection-array = entity-position-dict.at(entity-position)
 
@@ -528,6 +528,9 @@
   /// connection.
   /// -> bool
   intersect: false,
+  /// Arguments passed to ```typ #std.rect()```.
+  /// -> args
+  ..args,
 ) = {
   _ = z.parse(
     (
@@ -568,19 +571,26 @@
   let is-array = type(label) == array
 
   get-ctx(ctx => {
+    let polygon-args = update-dict(
+      (
+        fill: handle-auto(
+          ctx.settings.fill.relations,
+          ctx.settings.fill.entities,
+        ),
+        stroke: handle-auto(
+          ctx.settings.stroke.relations,
+          ctx.settings.stroke.entities,
+        ),
+      ),
+      args.named(),
+    )
+
     polygon(
       coordinates,
       4,
       radius: if not is-array and label != none { measure(label).width * 0.5 + measure(label).height } else { 0.5 },
       name: name,
-      fill: handle-auto(
-        ctx.settings.fill.relations,
-        ctx.settings.fill.entities,
-      ),
-      stroke: handle-auto(
-        ctx.settings.stroke.relations,
-        ctx.settings.stroke.entities,
-      ),
+      ..polygon-args,
     )
     if is-array {
       content(
@@ -607,13 +617,18 @@
     )
   })
 
-  get-ctx(ctx => {
-    if not is-same-entity {
+  if not is-same-entity {
+    get-ctx(ctx => {
+      let entity-position = utils.get-rel-entities(name, entities, ctx)
       for i in range(0, entities.len()) {
         let coordinate-start = if is-array { label.at(0) } else { label }
         let arr = (entities.at(i),)
         if (intersect and not is-same-axis(entities.at(i), name, ctx)) {
-          arr.push((entities.at(i), "-|", name))
+          let intersecton-symbol = "-|"
+          if (entity-position in ("north", "south")) {
+            intersecton-symbol = "|-"
+          }
+          arr.push((entities.at(i), intersecton-symbol, name))
         }
         arr.push(name)
         line(
@@ -625,52 +640,52 @@
           label: cardinality.at(i),
         )
       }
+    })
+  } else {
+    let from-entity = if is-entities-array.at(0) {
+      (
+        entities.at(0).at(0) + "." + entities.at(0).at(1),
+        ((), "|-", name),
+      )
     } else {
-      let from-entity = if is-entities-array.at(0) {
+      (
+        entities.at(0) + ".north",
+        (rel: (0, 1)),
+        ((), "-|", name),
+      )
+    }
+    let to-entity = (
+      if is-entities-array.at(1) {
         (
-          entities.at(0).at(0) + "." + entities.at(0).at(1),
-          ((), "|-", name),
+          entities.at(1).at(0) + "." + entities.at(1).at(1),
         )
       } else {
         (
-          entities.at(0) + ".north",
-          (rel: (0, 1)),
-          ((), "-|", name),
+          entities.at(1) + ".south",
+          (rel: (0, -1)),
         )
       }
-      let to-entity = (
-        if is-entities-array.at(1) {
-          (
-            entities.at(1).at(0) + "." + entities.at(1).at(1),
-          )
-        } else {
-          (
-            entities.at(1) + ".south",
-            (rel: (0, -1)),
-          )
-        }
-          + (((), "-|", name),)
-      )
-      line(
-        ..from-entity,
-        name,
-        name: name + "-from-entity",
-      )
-      line(
-        ..to-entity,
-        name,
-        name: name + "-to-entity",
-      )
-      _draw-cardinality-box(
-        name + "-from-entity" + ".start",
-        label: cardinality.at(0),
-      )
-      _draw-cardinality-box(
-        name + "-to-entity" + ".start",
-        label: cardinality.at(1),
-      )
-    }
-  })
+        + (((), "-|", name),)
+    )
+    line(
+      ..from-entity,
+      name,
+      name: name + "-from-entity",
+    )
+    line(
+      ..to-entity,
+      name,
+      name: name + "-to-entity",
+    )
+    _draw-cardinality-box(
+      name + "-from-entity" + ".start",
+      label: cardinality.at(0),
+    )
+    _draw-cardinality-box(
+      name + "-to-entity" + ".start",
+      label: cardinality.at(1),
+    )
+  }
 
   if attributes != none {
     for (side, attr) in attributes {

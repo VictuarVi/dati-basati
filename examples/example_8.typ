@@ -2,11 +2,10 @@
 
 #set page(width: auto, height: auto, margin: 1cm, fill: rgb("#5E0606").lighten(80%))
 
-#import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.1"
+#import "@preview/dati-basati:0.1.1" as db
 
-#show: dati-basati.dati-basati.with(
-  ..dati-basati.themes.futurama,
+#show: db.dati-basati.with(
+  ..db.themes.futurama,
 )
 
 #let entities = (
@@ -114,9 +113,9 @@
   ),
 )
 
-#dati-basati.er-diagram({
+#db.er-diagram({
   for entity in entities.values() {
-    dati-basati.entity(
+    db.entity(
       entity.coordinates,
       label: entity.label,
       name: entity.name,
@@ -128,7 +127,7 @@
   }
 
   for relation in relations.values() {
-    dati-basati.relation(
+    db.relation(
       coordinates: relation.at("coordinates", default: none),
       entities: relation.entities,
       name: relation.name,
@@ -138,39 +137,12 @@
     )
   }
 
-  dati-basati.subentities(
+  db.subentities(
     entity: "prodotto",
     subentities: ("video", "libro"),
   )
-  dati-basati.subentities(
+  db.subentities(
     entity: "libro",
     subentities: ("digitale", "carta"),
   )
-
-  // import cetz.draw: *
-
-  // hide({
-  //   line(
-  //     ("digitale.east", "|-", "libro"),
-  //     "libro",
-  //     name: "bella",
-  //   )
-  // })
-
-  // line(
-  //   "digitale",
-  //   ("digitale", "-|", "bella.mid"),
-  //   "bella.mid"
-  // )
-  // line(
-  //   "carta",
-  //   ("carta", "-|", "bella.mid"),
-  //   "bella.mid"
-  // )
-
-  // line(
-  //   "bella.mid",
-  //   "libro",
-  //   mark: (end: "subentity-mark")
-  // )
 })

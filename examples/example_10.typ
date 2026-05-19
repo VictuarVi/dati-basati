@@ -2,13 +2,12 @@
 
 #set page(width: auto, height: auto, margin: 1cm, fill: rgb("#D4E2E8"))
 
-#import "@preview/cetz:0.4.2"
-#import "@preview/dati-basati:0.1.1"
+#import "@preview/dati-basati:0.1.1" as db
 
 #set text(font: "Manrope")
 
-#show: dati-basati.dati-basati.with(
-  ..dati-basati.themes.polimi,
+#show: db.dati-basati.with(
+  ..db.themes.polimi,
 )
 
 #let entities = (
@@ -162,9 +161,9 @@
   ),
 )
 
-#dati-basati.er-diagram({
+#db.er-diagram({
   for entity in entities.values() {
-    dati-basati.entity(
+    db.entity(
       entity.coordinates,
       label: entity.label,
       name: entity.name,
@@ -176,7 +175,7 @@
   }
 
   for relation in relations.values() {
-    dati-basati.relation(
+    db.relation(
       coordinates: relation.at("coordinates", default: none),
       entities: relation.entities,
       label: relation.at("label", default: none),
@@ -186,7 +185,7 @@
     )
   }
 
-  dati-basati.subentities(
+  db.subentities(
     hierarchy: "(t,e)",
     entity: "formato",
     subentities: ("pregio", "economico", "ebook"),
