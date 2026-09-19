@@ -1188,6 +1188,188 @@ Since the package is based on #link("https://github.com/cetz-package/cetz", "CeT
 })
 ```
 
+= Themes showcase
+
+#let quality = ("height", "width", "audio", "video")
+#let entities = (
+  "series": (
+    coordinates: (6, 0),
+    attributes: (
+      "north": (..quality.slice(0, 2),),
+      "south": (..quality.slice(2),),
+      "east": ("name", "year"),
+    ),
+    attributes-position: (
+      north: (alignment: left, dir: "ltr"),
+      south: (alignment: left, dir: "ltr"),
+    ),
+    primary-key: ("year", "name"),
+    label: "series",
+    name: "series",
+  ),
+  "episode": (
+    coordinates: (-0.6, 0),
+    attributes: (
+      "north": (..quality,),
+      "west": ("series", "year"),
+      "south": ("number",),
+    ),
+    attributes-position: (
+      north: (alignment: center, dir: "ltr"),
+      south: (alignment: right, dir: "rtl"),
+    ),
+    weak-entity: ("number", "series", "CCW"),
+    label: "episode",
+    name: "episode",
+  ),
+  "movie": (
+    coordinates: (-6, 0),
+    attributes: (
+      "north": (..quality.slice(0, 2),),
+      "south": (..quality.slice(2),),
+      "west": ("name", "year"),
+    ),
+    attributes-position: (
+      north: (alignment: right, dir: "rtl"),
+      south: (alignment: right, dir: "rtl"),
+    ),
+    primary-key: ("year", "name").rev(),
+    label: "movie ",
+    name: "movie",
+  ),
+  "category": (
+    coordinates: (0, 4),
+    attributes: (
+      "south": ("category", "title", "year").rev(),
+    ),
+    primary-key: ("title", "year").rev(),
+    label: "category",
+    name: "category",
+  ),
+  "status": (
+    coordinates: (0, -4),
+    attributes: (
+      "north": ("status", "title", "year").rev(),
+    ),
+    attributes-position: (
+      north: (alignment: left, dir: "ltr"),
+    ),
+    primary-key: ("title", "year").rev(),
+    label: "status",
+    name: "status",
+  ),
+)
+
+#let relations = (
+  "series-episode": (
+    entities: ("series", "episode"),
+    label: "has",
+    name: "series-episode",
+    cardinality: ("(1,n)", "(1,1)"),
+  ),
+  "series-category": (
+    coordinates: (6, 4),
+    entities: ("series", "category"),
+    label: "in",
+    name: "series-category",
+    cardinality: ("(1,1)", "(1,n)"),
+  ),
+  "movie-category": (
+    coordinates: (-6, 4),
+    entities: ("movie", "category"),
+    label: "in",
+    name: "movie-category",
+    cardinality: ("(1,1)", "(1,n)"),
+  ),
+  "series-status": (
+    coordinates: (6, -4),
+    entities: ("series", "status"),
+    label: "in",
+    name: "series-status",
+    cardinality: ("(1,1)", "(1,n)"),
+  ),
+  "movie-status": (
+    coordinates: (-6, -4),
+    entities: ("movie", "status"),
+    label: "in",
+    name: "movie-status",
+    cardinality: ("(1,1)", "(1,n)"),
+  ),
+)
+#db.themes.keys().sorted()
+#let font-per-theme = (
+  db
+    .themes
+    .keys()
+    .sorted()
+    .zip(
+      (
+        "Libertinus Serif",
+        "Libertinus Serif",
+        "Libertinus Serif",
+        "Carlito",
+        "Manrope",
+        "Titillium Web",
+        "IBM Plex Sans",
+        "Barlow",
+        "Libertinus Sans",
+      ),
+    )
+    .to-dict()
+)
+#let fill-per-theme = (
+  db
+    .themes
+    .keys()
+    .sorted()
+    .zip(
+      ("#ccd5e0", "#ffffff", "#dfcdcd", "#fffcf3", "#d4e2e8", "#ffffff", "#fffcf3", "#ffffff", "#eae6ee"),
+    )
+    .to-dict()
+)
+#let theme-example(theme-name) = figure(
+  {
+    box(
+      fill: rgb(fill-per-theme.at(theme-name)),
+      scale(80%, [
+        #show: db.dati-basati.with(..db.themes.at(theme-name))
+        #set text(fill: black, font: font-per-theme.at(theme-name, default: auto))
+
+        #db.er-diagram(
+          length: 1.1cm,
+          {
+            for entity in entities.values() {
+              db.entity(
+                entity.coordinates,
+                label: entity.label,
+                name: entity.name,
+                attributes: entity.at("attributes", default: none),
+                weak-entity: entity.at("weak-entity", default: none),
+                attributes-position: entity.at("attributes-position", default: none),
+                primary-key: entity.at("primary-key", default: none),
+              )
+            }
+
+            for relation in relations.values() {
+              db.relation(
+                coordinates: relation.at("coordinates", default: none),
+                entities: relation.entities,
+                label: relation.at("label", default: none),
+                name: relation.name,
+                cardinality: relation.cardinality,
+                attributes: relation.at("attributes", default: none),
+              )
+            }
+          },
+        )
+      ]),
+    )
+  },
+  caption: [#raw(theme-name) theme (font: #font-per-theme.at(theme-name)).],
+)
+
+#db.themes.keys().sorted().map(e => theme-example(e)).join()
+
 #metadata(none)<_manual-end>
 
 #import "@preview/tidy:0.4.3": *

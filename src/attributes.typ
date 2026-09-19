@@ -111,7 +111,7 @@
           entity + "-" + attributes.at(i) + ".end",
           anchor: label-anchor,
           padding: (left: 0.5em, right: 0.5em),
-          attributes.at(i),
+          (ctx.settings.text.attributes)(attributes.at(i)),
         )
       })
     }
@@ -167,7 +167,7 @@
           entity + "-" + attributes.at(i) + ".end",
           anchor: label-anchor,
           padding: (left: 0.5em, right: 0.5em),
-          attributes.at(i),
+          (ctx.settings.text.attributes)(attributes.at(i)),
         )
       })
     }

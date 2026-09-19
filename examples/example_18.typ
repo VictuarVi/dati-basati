@@ -1,12 +1,12 @@
 // tiw 2
 
-#set page(width: auto, height: auto, margin: 1cm)
+#set page(width: auto, height: auto, margin: 1cm, fill: rgb("#300350").lighten(90%))
 
 #import "@preview/dati-basati:0.1.1" as db
 
 #set text(font: "Barlow")
 
-#show: db.dati-basati.with(..db.themes.tiw)
+#show: db.dati-basati.with(..db.themes.vaporvawe)
 
 #let entities = (
   "user": (
@@ -16,17 +16,17 @@
       "west": ("password", "name", "surname"),
     ),
     primary-key: "username",
-    label: "user",
+    label: "User",
     name: "user",
   ),
   "supplier": (
     coordinates: (0, -12),
-    label: "SUPPLIER",
+    label: "Supplier",
     name: "supplier",
   ),
   "client": (
     coordinates: (0, -16),
-    label: "client",
+    label: "Client",
     name: "client",
   ),
   "product": (
@@ -35,7 +35,7 @@
       "east": ("code", "name"),
     ),
     primary-key: ("code",),
-    label: "PRODUCT",
+    label: "Product",
     name: "product",
   ),
   "composite": (
@@ -43,12 +43,12 @@
     attributes: (
       "east": ("description", "price_min", "price_max"),
     ),
-    label: "composite",
+    label: "Composite",
     name: "composite",
   ),
   "simple": (
     coordinates: (8, -6),
-    label: "simple",
+    label: "Simple",
     name: "simple",
   ),
   "configuration": (
@@ -57,7 +57,7 @@
       "east": ("id", "date"),
     ),
     primary-key: ("id",),
-    label: "configuration",
+    label: "Configuration",
     name: "configuration",
   ),
   "sku": (
@@ -67,7 +67,7 @@
     ),
     attributes-position: (south: (alignment: center)),
     primary-key: ("code",),
-    label: "  SKU  ",
+    label: "SKU",
     name: "sku",
   ),
 )

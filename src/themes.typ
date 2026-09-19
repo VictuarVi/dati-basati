@@ -20,6 +20,9 @@
       relations: black,
       lines: black,
     ),
+    text: (
+      entities: l => text(size: 1.2em, weight: "bold", upper(l)),
+    ),
   ),
   "ghibli": (
     fill: (
@@ -44,6 +47,17 @@
       entities: 6pt,
       cardinality: 2pt,
     ),
+    text: (
+      entities: l => {
+        set par(leading: 0.35em)
+        text(
+          top-edge: "bounds",
+          size: 1.3em,
+          weight: "bold",
+          upper(l),
+        )
+      }
+    )
   ),
   "tiramisu": (
     fill: (
@@ -66,16 +80,15 @@
       entities: 6pt,
       cardinality: 2pt,
     ),
-    // text: (
-    //   entities: l => pad(x: 0.1em, (
-    //     text(
-    //       font: "IBM Plex Sans",
-    //       weight: "bold",
-    //       upper(l),
-    //     )
-    //   )),
-    //   attributes: l => text(font: "IBM Plex Sans", l),
-    // ),
+    text: (
+      entities: l => pad(x: 0.1em, (
+        text(
+          weight: "bold",
+          upper(l),
+        )
+      )),
+      relations: l => text(fill: black, l),
+    ),
     // spacing: (in-between: (x: 1.3em, y: 1.2em)),
   ),
   "futurama": (
@@ -192,5 +205,54 @@
     ),
     spacing: (in-between: (x: 1.2em, y: 1.3em), padding: 12.7pt),
     misc: (weak-entities-stroke: true),
+  ),
+  "vaporvawe": (
+    fill: (
+      entities: rgb("#ff809d"),
+      relations: rgb("#d7d7d7"),
+      cardinality: rgb("#ff809d"),
+      weak-entity: rgb("#5db299"),
+      primary-key: rgb("#5db299"),
+    ),
+    stroke: (
+      entities: rgb("#5db299"),
+      attributes: rgb("#5db299"),
+      relations: rgb("5db299"),
+      cardinality: rgb("#ff809d"),
+      weak-entity: rgb("#5db299"),
+      primary-key: rgb("#5db299"),
+    ),
+    radius: (
+      entities: 5pt,
+      cardinality: 3.3pt,
+    ),
+    text: (
+      entities: l => pad(x: 0.5em, text(
+        size: 1.1em,
+        weight: 650,
+        tracking: 4pt,
+        fill: rgb("#73f9b7"),
+        upper(l),
+      )),
+      relations: l => text(
+        weight: 600,
+        fill: rgb("#c689a7"),
+        emph(l),
+      ),
+      cardinality: l => text(
+        fill: rgb("#73f9b7"),
+        weight: 500,
+        top-edge: "bounds",
+        bottom-edge: "bounds",
+        l,
+      ),
+      attributes: l => text(
+        fill: rgb("#5db299"),
+        // top-edge: "bounds",
+        // bottom-edge: "bounds",
+        l,
+      ),
+    ),
+    spacing: (in-between: (x: 1.2em, y: 1.3em), padding: 12.7pt),
   ),
 )

@@ -6,9 +6,6 @@
 
 #show: db.dati-basati.with(
   ..db.themes.snow,
-  text: (
-    entities: l => text(size: 1.2em, weight: "bold", upper(l)),
-  ),
 )
 
 #let entities = (
