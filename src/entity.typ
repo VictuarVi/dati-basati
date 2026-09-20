@@ -1,6 +1,6 @@
 #import "@preview/cetz:0.5.2"
 #import cetz.draw: *
-#import "utils.typ": update-dict
+#import "utils.typ": merge-dicts
 
 /// Draw an entity box.
 /// -> content
@@ -22,15 +22,15 @@
   ..args,
 ) = {
   get-ctx(ctx => {
-    let rect-args = update-dict(
+    let rect-args = merge-dicts(
       (
-        stroke: ctx.settings.stroke.entities,
-        fill: ctx.settings.fill.entities,
-        radius: ctx.settings.radius.entities,
+        stroke: ctx.theme.stroke.entities,
+        fill: ctx.theme.fill.entities,
+        radius: ctx.theme.radius.entities,
       ),
       args.named(),
     )
-    let label-content = align(center, (ctx.settings.text.entities)(label))
+    let label-content = align(center, (ctx.theme.text.entities)(label))
     content(
       coordinates,
       std.rect(
@@ -41,7 +41,7 @@
       name: name,
     )
     // simulate double stroke
-    if ctx.settings.misc.weak-entities-stroke and has-weak-entity {
+    if ctx.theme.misc.weak-entities-stroke and has-weak-entity {
       let (width, height) = measure(label-content)
       content(
         coordinates,

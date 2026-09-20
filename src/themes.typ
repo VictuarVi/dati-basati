@@ -235,6 +235,10 @@
         fill: rgb("#FFBF00"),
         l,
       ),
+      relations-outside: l => text(
+        fill: rgb("#002E62"),
+        l,
+      ),
       cardinality: l => text(
         fill: rgb("#FFBF00"),
         top-edge: "bounds",

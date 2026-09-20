@@ -99,11 +99,11 @@
           stroke: if attr-stroke == auto {
             if attributes.at(i) == primary-key {
               handle-auto(
-                ctx.settings.stroke.primary-key,
-                ctx.settings.stroke.attributes,
+                ctx.theme.stroke.primary-key,
+                ctx.theme.stroke.attributes,
               )
             } else {
-              ctx.settings.stroke.attributes
+              ctx.theme.stroke.attributes
             }
           } else { attr-stroke },
         )
@@ -111,7 +111,7 @@
           entity + "-" + attributes.at(i) + ".end",
           anchor: label-anchor,
           padding: (left: 0.5em, right: 0.5em),
-          (ctx.settings.text.attributes)(attributes.at(i)),
+          (ctx.theme.text.attributes)(attributes.at(i)),
         )
       })
     }
@@ -155,11 +155,11 @@
           stroke: if attr-stroke == auto {
             if attributes.at(i) == primary-key {
               handle-auto(
-                ctx.settings.stroke.primary-key,
-                ctx.settings.stroke.attributes,
+                ctx.theme.stroke.primary-key,
+                ctx.theme.stroke.attributes,
               )
             } else {
-              ctx.settings.stroke.attributes
+              ctx.theme.stroke.attributes
             }
           } else { attr-stroke },
         )
@@ -167,7 +167,7 @@
           entity + "-" + attributes.at(i) + ".end",
           anchor: label-anchor,
           padding: (left: 0.5em, right: 0.5em),
-          (ctx.settings.text.attributes)(attributes.at(i)),
+          (ctx.theme.text.attributes)(attributes.at(i)),
         )
       })
     }
@@ -233,8 +233,8 @@
       (rel: rel-dict.at(position)),
       name: "comp-attr",
       stroke: handle-auto(
-        ctx.settings.stroke.composite-attributes,
-        ctx.settings.stroke.attributes,
+        ctx.theme.stroke.composite-attributes,
+        ctx.theme.stroke.attributes,
       ),
     )
 
@@ -245,21 +245,21 @@
       position: position,
       in-between: in-between,
       padding: padding,
-      attr-stroke: ctx.settings.stroke.composite-attributes,
+      attr-stroke: ctx.theme.stroke.composite-attributes,
     )
 
     circle(
       "comp-attr.end",
       fill: handle-auto(
-        ctx.settings.fill.composite-attributes,
+        ctx.theme.fill.composite-attributes,
         handle-auto(
-          ctx.settings.fill.entities,
+          ctx.theme.fill.entities,
           page.fill,
         ),
       ),
       stroke: handle-auto(
-        ctx.settings.stroke.composite-attributes,
-        ctx.settings.stroke.attributes,
+        ctx.theme.stroke.composite-attributes,
+        ctx.theme.stroke.attributes,
       ),
       radius: dimensions,
     )

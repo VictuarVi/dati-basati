@@ -11,7 +11,7 @@
 
 #set text(font: "Fira Sans")
 
-#show: db.dati-basati.with(
+#let catpuccin-red-latte-theme = (
   fill: (
     cardinality: palette.flamingo.rgb,
     entities: palette.red.rgb,
@@ -46,6 +46,8 @@
     cardinality: 6pt,
   ),
 )
+
+#show: db.dati-basati.with(theme: catpuccin-red-latte-theme)
 
 #let entities = (
   "piscina": (

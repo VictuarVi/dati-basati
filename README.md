@@ -209,7 +209,6 @@ See the [examples](/examples) directory for many exceptions and particular cases
 ## Roadmap 📝
 
 - Better options coordination (in order to avoid visual errors)
-- Local theming as opposed to the current global one
 
 ## Contributing 🚀
 

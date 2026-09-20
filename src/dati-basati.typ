@@ -9,35 +9,35 @@
 #import "themes.typ": themes
 #import "model.typ": *
 
-#let default-settings = (
+#let default-theme = (
   fill: (
     entities: none,
-    relations: none,
-    composite-attributes: auto,
+    relations: auto, // auto inherits entities
     primary-key: black,
-    weak-entity: auto,
-    cardinality: auto,
-    hierarchy: auto,
+    weak-entity: auto, // auto inherits primary-key
+    cardinality: auto, // auto = page fill
+    hierarchy: auto, // auto inherits cardinality
+    composite-attributes: auto, // auto inherits entities
   ),
   stroke: (
     entities: black,
-    relations: black,
+    relations: black, // auto inherits entities
+    lines: auto, // auto inherits entities
     attributes: black,
-    composite-attributes: auto,
-    primary-key: auto,
-    weak-entity: auto,
+    composite-attributes: auto, // auto inherits attributes
+    primary-key: auto, // auto inherits attributes
+    weak-entity: auto, // auto inherits primary-key
     cardinality: none,
-    hierarchy: auto,
-    lines: auto,
+    hierarchy: auto, // auto inherits cardinality
   ),
   radius: (
     entities: 0pt,
     cardinality: 0pt,
-    hierarchy: auto,
+    hierarchy: auto, // auto inherits cardinality
   ),
   spacing: (
-    in-between: (x: 1.2em, y: 1.2em),
-    padding: 1.2em,
+    in-between: (x: 1.2em, y: 1.2em), // spacing between attributes
+    padding: 1.2em, // distance from the entity
   ),
   text: (
     entities: l => {
@@ -50,6 +50,7 @@
       )
     },
     relations: l => l,
+    relations-outside: auto, // auto inherits relations
     attributes: l => l,
     cardinality: l => text(top-edge: "bounds", bottom-edge: "bounds", l),
     hierarchy: auto,
@@ -75,38 +76,41 @@
     ),
   ),
   misc: (
-    weak-entities-stroke: false,
+    weak-entities-stroke: false, // double stroke weak entities
     relations-intersection: "|-",
   ),
 )
 
-#let default-settings-state = state(
-  "default settings",
-  default-settings,
+#let _default-theme-state = state(
+  "__default-theme-state",
+  default-theme,
 )
 
-/// Default global settings.
+/// Default global theme.
 /// -> dictionary
 #let dati-basati(
-  /// The fill of each element.
+  /// Global theme for ER diagrams.
+  /// -> dictionary
+  theme: (:),
+  /// The fill of each element. Deprecated: use `theme`.
   /// -> dictionary
   fill: (:),
-  /// The stroke of each element.
+  /// The stroke of each element. . Deprecated: use `theme`.
   /// -> dictionary
   stroke: (:),
-  /// The radius of entities, cardinality and hierarchy.
+  /// The radius of entities, cardinality and hierarchy. . Deprecated: use `theme`.
   /// -> dictionary
   radius: (:),
-  /// The spacing of attributes.
+  /// The spacing of attributes. . Deprecated: use `theme`.
   /// -> dictionary
   spacing: (:),
-  /// Text formatting of each element.
+  /// Text formatting of each element. . Deprecated: use `theme`.
   /// -> dictionary
   text: (:),
-  /// The position and direction of attributes.
+  /// The position and direction of attributes. . Deprecated: use `theme`.
   /// -> dictionary
   attributes-position: (:),
-  /// Miscellanous options.
+  /// Miscellanous options. . Deprecated: use `theme`.
   /// -> dictionary
   misc: (:),
   body,
@@ -121,36 +125,28 @@
       attributes-position: attributes-position,
       misc: misc,
     ),
-    settings-schema,
+    theme-schema,
   )
 
-  default-settings-state.update(s => {
+  // retrocompatibility
+  if (theme == (:)) {
+    theme = (
+      fill: fill,
+      stroke: stroke,
+      radius: radius,
+      spacing: spacing,
+      text: text,
+      attributes-position: attributes-position,
+      misc: misc,
+    )
+  }
+
+  _default-theme-state.update(s => {
     let old = s
 
-    let new-fill = update-dict(default-settings.fill, fill)
-    old.insert("fill", new-fill)
+    if (old == none) { return }
 
-    let new-stroke = update-dict(default-settings.stroke, stroke)
-    old.insert("stroke", new-stroke)
-
-    let new-radius = update-dict(default-settings.radius, radius)
-    old.insert("radius", new-radius)
-
-    let new-spacing = update-dict(default-settings.spacing, spacing)
-    old.insert("spacing", new-spacing)
-
-    let new-text = update-dict(default-settings.text, text)
-    old.insert("text", new-text)
-
-    let new-attributes-position = update-dict(
-      default-settings.attributes-position,
-      attributes-position,
-      are-val-dict: true,
-    )
-    old.insert("attributes-position", new-attributes-position)
-
-    let new-misc = update-dict(default-settings.misc, misc)
-    old.insert("misc", new-misc)
+    let old = merge-dicts(default-theme, theme)
 
     return old
   })
@@ -172,24 +168,26 @@
   /// -> content
   body,
 ) = context {
-  let default-settings = default-settings-state.get()
-  cetz.canvas(
-    ..args,
-    {
-      set-ctx(ctx => ctx + (settings: default-settings))
+  let local-theme = merge-dicts(_default-theme-state.get(), theme)
+  context {
+    cetz.canvas(
+      ..args,
+      {
+        set-ctx(ctx => ctx + (theme: local-theme))
 
-      custom-marks.subentity-mark
-      custom-marks.righetta
-      custom-marks.empty-circle
+        custom-marks.subentity-mark
+        custom-marks.righetta
+        custom-marks.empty-circle
 
-      get-ctx(ctx => {
-        custom-marks.filled-circle-mpk(fill: ctx.settings.fill.primary-key)
-        custom-marks.filled-circle-pk(fill: ctx.settings.fill.primary-key)
-      })
+        get-ctx(ctx => {
+          custom-marks.filled-circle-mpk(fill: ctx.theme.fill.primary-key)
+          custom-marks.filled-circle-pk(fill: ctx.theme.fill.primary-key)
+        })
 
-      body
-    },
-  )
+        body
+      },
+    )
+  }
 }
 
 /// Draw an entity.
@@ -249,10 +247,9 @@
   // draw attributes and single primary key
   if attributes != none {
     get-ctx(ctx => {
-      let merged-attributes-position = update-dict(
-        ctx.settings.attributes-position,
+      let merged-attributes-position = merge-dicts(
+        ctx.theme.attributes-position,
         attributes-position,
-        are-val-dict: true,
       )
 
       let is-there-an-array(x) = x.filter(e => type(e) == array).len() > 0
@@ -263,8 +260,8 @@
             name + "." + side,
             attr.at(0),
             position: side,
-            in-between: ctx.settings.spacing.in-between,
-            padding: ctx.settings.spacing.padding,
+            in-between: ctx.theme.spacing.in-between,
+            padding: ctx.theme.spacing.padding,
           )
           continue
         }
@@ -273,7 +270,7 @@
           name,
           side,
           merged-attributes-position.at(side).alignment,
-          ctx.settings.spacing.in-between,
+          ctx.theme.spacing.in-between,
           1,
         )
 
@@ -290,8 +287,8 @@
           dir: merged-attributes-position.at(side).dir,
           drawing-mode: draw-mode,
           centered: merged-attributes-position.at(side).alignment == center,
-          in-between: ctx.settings.spacing.in-between,
-          padding: ctx.settings.spacing.padding,
+          in-between: ctx.theme.spacing.in-between,
+          padding: ctx.theme.spacing.padding,
         )
       }
     })
@@ -312,8 +309,8 @@
         ((), intersection, name + "-" + primary-key.last()),
         mark: marks,
         stroke: handle-auto(
-          ctx.settings.stroke.primary-key,
-          ctx.settings.stroke.attributes,
+          ctx.theme.stroke.primary-key,
+          ctx.theme.stroke.attributes,
         ),
       )
     })
@@ -328,7 +325,7 @@
           name,
           (weak-entity.at(0), weak-entity.at(1), direction),
           attributes,
-          ctx.settings.spacing.padding,
+          ctx.theme.spacing.padding,
         )
         return
       }
@@ -350,7 +347,7 @@
                 name,
                 strong-entity-position,
                 attributes,
-                ctx.settings.spacing.padding,
+                ctx.theme.spacing.padding,
               ),
               if misc != none and misc.at("weak-entity-intersection", default: none) != none {
                 (name, name + "-" + weak-entity.at(1))
@@ -358,7 +355,7 @@
                 (name, weak-entity.at(1))
               },
             )
-            utils.draw-anchors(name, ctx.settings.spacing.padding / 2)
+            utils.draw-anchors(name, ctx.theme.spacing.padding / 2)
           })
           get-ctx(ctx => {
             let final-side = utils.get-diagonal-side("intersection.0", name, ctx)
@@ -368,7 +365,7 @@
               name,
               (weak-entity.at(0), final-side, direction),
               attributes,
-              ctx.settings.spacing.padding,
+              ctx.theme.spacing.padding,
               intersection: intersection,
             )
           })
@@ -377,7 +374,7 @@
             name,
             (weak-entity.at(0), strong-entity-position.first(), direction),
             attributes,
-            ctx.settings.spacing.padding,
+            ctx.theme.spacing.padding,
           )
         }
       } else {
@@ -393,7 +390,7 @@
               direction,
             ),
             attributes,
-            ctx.settings.spacing.padding,
+            ctx.theme.spacing.padding,
           )
         }
       }
@@ -490,7 +487,7 @@
           intersection-array.at(1),
           meeting-point,
         ),
-        // stroke: ctx.settings.stroke.subentities,
+        // stroke: ctx.theme.stroke.subentities,
       )
     }
 
@@ -500,7 +497,7 @@
       "hierarchy-box",
       mark: (end: "subentity-mark"),
       name: "line-subentities",
-      // stroke: ctx.settings.stroke.subentities,
+      // stroke: ctx.theme.stroke.subentities,
     )
   })
 }
@@ -574,15 +571,15 @@
   let is-array = type(label) == array
 
   get-ctx(ctx => {
-    let polygon-args = update-dict(
+    let polygon-args = merge-dicts(
       (
         fill: handle-auto(
-          ctx.settings.fill.relations,
-          ctx.settings.fill.entities,
+          ctx.theme.fill.relations,
+          ctx.theme.fill.entities,
         ),
         stroke: handle-auto(
-          ctx.settings.stroke.relations,
-          ctx.settings.stroke.entities,
+          ctx.theme.stroke.relations,
+          ctx.theme.stroke.entities,
         ),
       ),
       args.named(),
@@ -607,9 +604,12 @@
     let label-str = ""
     if is-array {
       label-args.insert("anchor", label.at(1))
-      label-str = (ctx.settings.text.relations)(label.at(0))
+      label-str = handle-auto(
+        ctx.theme.text.relations-outside,
+        ctx.theme.text.relations,
+      )(label.at(0))
     } else {
-      label-str = align(center, (ctx.settings.text.relations)(label))
+      label-str = align(center, (ctx.theme.text.relations)(label))
     }
     content(
       (),
@@ -620,8 +620,8 @@
     set-style(
       line: (
         stroke: handle-auto(
-          ctx.settings.stroke.lines,
-          ctx.settings.stroke.entities,
+          ctx.theme.stroke.lines,
+          ctx.theme.stroke.entities,
         ),
       ),
     )

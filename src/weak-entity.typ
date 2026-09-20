@@ -134,22 +134,22 @@
   get-ctx(ctx => {
     custom-marks.filled-circle-wk(
       fill: utils.handle-auto(
-        ctx.settings.fill.weak-entity,
-        ctx.settings.fill.primary-key,
+        ctx.theme.fill.weak-entity,
+        ctx.theme.fill.primary-key,
       ),
       wk-mark-length,
     )
     set-style(
       line: (
         stroke: utils.handle-auto(
-          ctx.settings.stroke.weak-entity,
-          ctx.settings.stroke.primary-key,
+          ctx.theme.stroke.weak-entity,
+          ctx.theme.stroke.primary-key,
         ),
       ),
       angle: (
         stroke: utils.handle-auto(
-          ctx.settings.stroke.weak-entity,
-          ctx.settings.stroke.primary-key,
+          ctx.theme.stroke.weak-entity,
+          ctx.theme.stroke.primary-key,
         ),
       ),
     )
@@ -230,13 +230,13 @@
           ..start-end-angle,
           name: "angle-" + angle,
           radius: angle-radius,
-          stroke: ctx.settings.stroke.weak-entity,
+          stroke: ctx.theme.stroke.weak-entity,
         )
       }
       for chunk in mid.map(e => e.join("-")).slice(1, mid.len() - 1).chunks(2) {
         line(
           ..chunk,
-          stroke: ctx.settings.stroke.weak-entity,
+          stroke: ctx.theme.stroke.weak-entity,
         )
       }
     })

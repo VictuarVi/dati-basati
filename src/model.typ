@@ -208,7 +208,7 @@
   ),
 ))
 
-#let settings-schema = z.dictionary(
+#let theme-schema = z.dictionary(
   optional: true,
   (
     fill: z.dictionary((
@@ -248,6 +248,7 @@
     text: z.dictionary((
       entities: z.function(optional: true),
       relations: z.function(optional: true),
+      relations-outside: z.function(optional: true),
       attributes: z.function(optional: true),
       cardinality: z.function(optional: true),
       hierarchy: z.function(optional: true),

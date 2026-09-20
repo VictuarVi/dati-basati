@@ -107,38 +107,41 @@
         to: coordinate,
       )
     } else {
-      panic("Questo non può capitare.")
+      panic("This can't happen.")
     }
   }
   return coordinate
 }
 
-/// Update a dictionary.
+/// Add a dictionary to another dictionary recursively. Integrated from Touying.
 /// -> dictionary
-#let update-dict(
-  old-dict,
-  new-dict,
-  /// Whether the dictionaries have values that are themselves dictionaries.
-  /// -> bool
-  are-val-dict: false,
-) = {
-  if new-dict == none {
-    return old-dict
-  }
-  let updated-dict = old-dict
-  for (k, v) in old-dict {
-    if new-dict.keys().contains(k) {
-      if are-val-dict and type(new-dict.at(k)) == dictionary {
-        updated-dict.insert(
-          k,
-          update-dict(old-dict.at(k), new-dict.at(k)),
-        )
-      } else {
-        updated-dict.insert(k, new-dict.at(k))
-      }
+#let add-dicts(dict-a, dict-b) = {
+  let res = dict-a
+  if (dict-b == none) { return res }
+  for key in dict-b.keys() {
+    if (
+      key in res and type(res.at(key)) == dictionary and type(dict-b.at(key)) == dictionary
+    ) {
+      res.insert(key, add-dicts(res.at(key), dict-b.at(key)))
+    } else {
+      res.insert(key, dict-b.at(key))
     }
   }
-  return updated-dict
+  return res
+}
+
+/// Merge some dictionaries recursively. Integrated from Touying.
+/// -> dictionary
+#let merge-dicts(init-dict, ..dicts) = {
+  assert(
+    dicts.named().len() == 0,
+    message: "You must provide dictionaries as positional arguments",
+  )
+  let res = init-dict
+  for dict in dicts.pos() {
+    res = add-dicts(res, dict)
+  }
+  return res
 }
 
 /// If first is auto, then use second; otherwise first.

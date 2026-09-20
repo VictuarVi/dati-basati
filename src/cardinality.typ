@@ -1,6 +1,6 @@
 #import "@preview/cetz:0.5.2"
 #import cetz.draw: *
-#import "utils.typ": handle-auto, update-dict
+#import "utils.typ": handle-auto, merge-dicts
 
 /// Draw a cardinality box.
 /// -> content
@@ -23,24 +23,24 @@
 ) = {
   get-ctx(ctx => {
     let handle-cardinality-fill = {
-      if ctx.settings.fill.cardinality == auto {
+      if ctx.theme.fill.cardinality == auto {
         handle-auto(page.fill, white)
       } else {
-        ctx.settings.fill.cardinality
+        ctx.theme.fill.cardinality
       }
     }
 
     let final-handle(arg, override: none) = {
-      let cardinality = ctx.settings.at(arg).cardinality
+      let cardinality = ctx.theme.at(arg).cardinality
       if override != none {
         cardinality = override
       }
       if not hierarchy { cardinality } else {
-        handle-auto(ctx.settings.at(arg).hierarchy, cardinality)
+        handle-auto(ctx.theme.at(arg).hierarchy, cardinality)
       }
     }
 
-    let box-args = update-dict(
+    let box-args = merge-dicts(
       (
         stroke: final-handle("stroke"),
         radius: final-handle("radius"),

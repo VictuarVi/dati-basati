@@ -69,7 +69,7 @@
     )
     v(-0.5cm)
     text(style: "italic")[
-      A Typst package to draw ER diagrams.
+      #toml("../typst.toml").package.description
     ]
     parbreak()
     text(weight: "bold", style: "italic", size: 1.2em, {
@@ -819,7 +819,7 @@ Currently the themes are:
 
 The theme schema is as follows:
 ```typ
-#let default-settings = (
+#let default-theme = (
   fill: (
     entities: none,
     relations: auto, // auto inherits entities
@@ -860,6 +860,7 @@ The theme schema is as follows:
       )
     },
     relations: l => l,
+    relations-outside: auto, // auto inherits relations
     attributes: l => l,
     cardinality: l => text(top-edge: "bounds", bottom-edge: "bounds", l),
     hierarchy: auto,
@@ -891,18 +892,24 @@ The theme schema is as follows:
 )
 ```
 
-You can override single settings:
+/ Global theme: By design, a theme is to be set globally:
 ```typ
 #import "@preview/dati-basati:0.1.1" as db
-#show: db.with(..db.themes.at("theme-name"), entities: (fill: green))
+#show: db.dati-basati.with(theme: themes.at("theme-name"))
 ```
 
-Or create new themes following the schema:
+And it can be overridden:
+```typ
+#import "@preview/dati-basati:0.1.1" as db
+#show: db.dati-basati.with(theme: themes.at("theme-name"), entities: (fill: green))
+```
+
+You can also create your own theme:
 ```typ
 #import "@preview/dati-basati:0.1.1" as db
 #import "@preview/catppuccin:1.0.1": *
 #let palette = flavors.latte.colors
-#show: db.with(
+#let catpuccin-red-latte-theme = (
   fill: (
     cardinality: palette.flamingo.rgb,
     entities: palette.red.rgb,
@@ -937,17 +944,28 @@ Or create new themes following the schema:
     cardinality: 6pt,
   ),
 )
+#show: db.dati-basati.with(theme: catpuccin-red-latte-theme)
 ```
+
+See #link("https://github.com/victuarvi/dati-basati/blob/main/examples/example_14.pdf", `example 14`) to see how this theme looks.
 
 There are plenty of examples with each and every theme -- and corresponding source code -- in #link("https://github.com/victuarvi/dati-basati/blob/main/examples", `/examples`).
 
-#tip[
-  If you need different ER diagrams to have different themes, create a `.typ` file and then include that -- in this way, you can apply the `show` rule with the specific theme in the scope of the single file.
-
-  In the future, the theming settings could be implemented per `er-diagram`.
-]
-
 #pagebreak()
+
+/ Local setting: You also set a theme in an individual diagram:
+```typ
+#import "@preview/dati-basati:0.1.1" as db
+#show: db.dati-basati.with(theme: themes.at("global-theme"))
+
+// this will use the local theme
+#db.er-diagram(theme: themes.at("local-theme"), {...})
+
+// this will use the global theme
+#db.er-diagram({...})
+```
+
+The overrides still apply as expected.
 
 == Individual styling overrides
 
@@ -981,6 +999,179 @@ At the start of the document the user is able to declare the global styling argu
   })
   ```,
 )
+
+== Themes showcase<themes-showcase>
+
+#let quality = ("height", "width", "audio", "video")
+#let entities = (
+  "series": (
+    coordinates: (6, 0),
+    attributes: (
+      "north": (..quality.slice(0, 2),),
+      "south": (..quality.slice(2),),
+      "east": ("name", "year"),
+    ),
+    attributes-position: (
+      north: (alignment: left, dir: "ltr"),
+      south: (alignment: left, dir: "ltr"),
+    ),
+    primary-key: ("year", "name"),
+    label: "series",
+    name: "series",
+  ),
+  "episode": (
+    coordinates: (-0.6, 0),
+    attributes: (
+      "north": (..quality,),
+      "west": ("series", "year"),
+      "south": ("number",),
+    ),
+    attributes-position: (
+      north: (alignment: center, dir: "ltr"),
+      south: (alignment: right, dir: "rtl"),
+    ),
+    weak-entity: ("number", "series", "CCW"),
+    label: "episode",
+    name: "episode",
+  ),
+  "movie": (
+    coordinates: (-6, 0),
+    attributes: (
+      "north": (..quality.slice(0, 2),),
+      "south": (..quality.slice(2),),
+      "west": ("name", "year"),
+    ),
+    attributes-position: (
+      north: (alignment: right, dir: "rtl"),
+      south: (alignment: right, dir: "rtl"),
+    ),
+    primary-key: ("year", "name").rev(),
+    label: "movie ",
+    name: "movie",
+  ),
+  "category": (
+    coordinates: (0, 4),
+    attributes: (
+      "south": ("category", "title", "year").rev(),
+    ),
+    primary-key: ("title", "year").rev(),
+    label: "category",
+    name: "category",
+  ),
+  "status": (
+    coordinates: (0, -4),
+    attributes: (
+      "north": ("status", "title", "year").rev(),
+    ),
+    attributes-position: (
+      north: (alignment: left, dir: "ltr"),
+    ),
+    primary-key: ("title", "year").rev(),
+    label: "status",
+    name: "status",
+  ),
+)
+
+#let relations = (
+  "series-episode": (
+    entities: ("series", "episode"),
+    label: "has",
+    name: "series-episode",
+    cardinality: ("(1,n)", "(1,1)"),
+  ),
+  "series-category": (
+    coordinates: (6, 4),
+    entities: ("series", "category"),
+    label: "in",
+    name: "series-category",
+    cardinality: ("(1,1)", "(1,n)"),
+  ),
+  "movie-category": (
+    coordinates: (-6, 4),
+    entities: ("movie", "category"),
+    label: "in",
+    name: "movie-category",
+    cardinality: ("(1,1)", "(1,n)"),
+  ),
+  "series-status": (
+    coordinates: (6, -4),
+    entities: ("series", "status"),
+    label: "in",
+    name: "series-status",
+    cardinality: ("(1,1)", "(1,n)"),
+  ),
+  "movie-status": (
+    coordinates: (-6, -4),
+    entities: ("movie", "status"),
+    label: "in",
+    name: "movie-status",
+    cardinality: ("(1,1)", "(1,n)"),
+  ),
+)
+#let theme-with-font-and-fill = (
+  db
+    .themes
+    .keys()
+    .zip(
+      (
+        ("Libertinus Serif", "ffffff"), // default
+        ("Barlow", "ffffff"), // tiw
+        ("Libertinus Serif", "ffffff"), // snow
+        ("Carlito", "#fff9e0"), // ghibli
+        ("IBM Plex Sans", "fffcf3"), // tiramisu
+        ("Libertinus Serif", "dfcdcd"), // futurama
+        ("Libertinus Serif", "ffffff"), // C62-50
+        ("Libertinus Serif", "ccd5e0"), // C62-48
+        ("Manrope", "d4e2e8"), // polimi
+        ("Libertinus Sans", "eae6ee"), // vaporvawe
+        ("Titillium Web", "dde9f4"), // gali
+      ),
+    )
+    .flatten()
+    .chunks(3)
+)
+#let theme-example(theme-name, font, fill) = figure(
+  {
+    block(
+      fill: rgb(fill),
+      scale(80%, [
+        #set text(fill: black, font: font)
+
+        #db.er-diagram(
+          theme: db.themes.at(theme-name),
+          length: 1.1cm,
+          {
+            for entity in entities.values() {
+              db.entity(
+                entity.coordinates,
+                label: entity.label,
+                name: entity.name,
+                attributes: entity.at("attributes", default: none),
+                weak-entity: entity.at("weak-entity", default: none),
+                attributes-position: entity.at("attributes-position", default: none),
+                primary-key: entity.at("primary-key", default: none),
+              )
+            }
+
+            for relation in relations.values() {
+              db.relation(
+                coordinates: relation.at("coordinates", default: none),
+                entities: relation.entities,
+                label: relation.at("label", default: none),
+                name: relation.name,
+                cardinality: relation.cardinality,
+                attributes: relation.at("attributes", default: none),
+              )
+            }
+          },
+        )
+      ]),
+    )
+  },
+  caption: [#raw(theme-name) theme (font: #font).],
+)
+
+#theme-with-font-and-fill.map(e => theme-example(..e)).join()
 
 = Advanced usage
 
@@ -1187,189 +1378,6 @@ Since the package is based on #link("https://github.com/cetz-package/cetz", "CeT
   entity(...)
 })
 ```
-
-= Themes showcase
-
-#let quality = ("height", "width", "audio", "video")
-#let entities = (
-  "series": (
-    coordinates: (6, 0),
-    attributes: (
-      "north": (..quality.slice(0, 2),),
-      "south": (..quality.slice(2),),
-      "east": ("name", "year"),
-    ),
-    attributes-position: (
-      north: (alignment: left, dir: "ltr"),
-      south: (alignment: left, dir: "ltr"),
-    ),
-    primary-key: ("year", "name"),
-    label: "series",
-    name: "series",
-  ),
-  "episode": (
-    coordinates: (-0.6, 0),
-    attributes: (
-      "north": (..quality,),
-      "west": ("series", "year"),
-      "south": ("number",),
-    ),
-    attributes-position: (
-      north: (alignment: center, dir: "ltr"),
-      south: (alignment: right, dir: "rtl"),
-    ),
-    weak-entity: ("number", "series", "CCW"),
-    label: "episode",
-    name: "episode",
-  ),
-  "movie": (
-    coordinates: (-6, 0),
-    attributes: (
-      "north": (..quality.slice(0, 2),),
-      "south": (..quality.slice(2),),
-      "west": ("name", "year"),
-    ),
-    attributes-position: (
-      north: (alignment: right, dir: "rtl"),
-      south: (alignment: right, dir: "rtl"),
-    ),
-    primary-key: ("year", "name").rev(),
-    label: "movie ",
-    name: "movie",
-  ),
-  "category": (
-    coordinates: (0, 4),
-    attributes: (
-      "south": ("category", "title", "year").rev(),
-    ),
-    primary-key: ("title", "year").rev(),
-    label: "category",
-    name: "category",
-  ),
-  "status": (
-    coordinates: (0, -4),
-    attributes: (
-      "north": ("status", "title", "year").rev(),
-    ),
-    attributes-position: (
-      north: (alignment: left, dir: "ltr"),
-    ),
-    primary-key: ("title", "year").rev(),
-    label: "status",
-    name: "status",
-  ),
-)
-
-#let relations = (
-  "series-episode": (
-    entities: ("series", "episode"),
-    label: "has",
-    name: "series-episode",
-    cardinality: ("(1,n)", "(1,1)"),
-  ),
-  "series-category": (
-    coordinates: (6, 4),
-    entities: ("series", "category"),
-    label: "in",
-    name: "series-category",
-    cardinality: ("(1,1)", "(1,n)"),
-  ),
-  "movie-category": (
-    coordinates: (-6, 4),
-    entities: ("movie", "category"),
-    label: "in",
-    name: "movie-category",
-    cardinality: ("(1,1)", "(1,n)"),
-  ),
-  "series-status": (
-    coordinates: (6, -4),
-    entities: ("series", "status"),
-    label: "in",
-    name: "series-status",
-    cardinality: ("(1,1)", "(1,n)"),
-  ),
-  "movie-status": (
-    coordinates: (-6, -4),
-    entities: ("movie", "status"),
-    label: "in",
-    name: "movie-status",
-    cardinality: ("(1,1)", "(1,n)"),
-  ),
-)
-#let font-per-theme = (
-  db
-    .themes
-    .keys()
-    .sorted()
-    .zip(
-      (
-        "Libertinus Serif",
-        "Libertinus Serif",
-        "Libertinus Serif",
-        "Libertinus Serif",
-        "Libertinus Serif",
-        "Carlito",
-        "Manrope",
-        "Titillium Web",
-        "IBM Plex Sans",
-        "Barlow",
-        "Libertinus Sans",
-      ),
-    )
-    .to-dict()
-)
-#let fill-per-theme = (
-  db
-    .themes
-    .keys()
-    .sorted()
-    .zip(
-      ("#ccd5e0", "#ffffff", "ffffff", "dfcdcd", "#dde9f4", "#fffcf3", "#d4e2e8", "#ffffff", "#fffcf3", "#ffffff", "#eae6ee"),
-    )
-    .to-dict()
-)
-#let theme-example(theme-name) = figure(
-  {
-    box(
-      fill: rgb(fill-per-theme.at(theme-name)),
-      scale(80%, [
-        #show: db.dati-basati.with(..db.themes.at(theme-name))
-        #set text(fill: black, font: font-per-theme.at(theme-name, default: auto))
-
-        #db.er-diagram(
-          length: 1.1cm,
-          {
-            for entity in entities.values() {
-              db.entity(
-                entity.coordinates,
-                label: entity.label,
-                name: entity.name,
-                attributes: entity.at("attributes", default: none),
-                weak-entity: entity.at("weak-entity", default: none),
-                attributes-position: entity.at("attributes-position", default: none),
-                primary-key: entity.at("primary-key", default: none),
-              )
-            }
-
-            for relation in relations.values() {
-              db.relation(
-                coordinates: relation.at("coordinates", default: none),
-                entities: relation.entities,
-                label: relation.at("label", default: none),
-                name: relation.name,
-                cardinality: relation.cardinality,
-                attributes: relation.at("attributes", default: none),
-              )
-            }
-          },
-        )
-      ]),
-    )
-  },
-  caption: [#raw(theme-name) theme (font: #font-per-theme.at(theme-name)).],
-)
-
-#db.themes.keys().sorted().map(e => theme-example(e)).join()
 
 #metadata(none)<_manual-end>
 
