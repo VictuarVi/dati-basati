@@ -311,7 +311,10 @@
         name + "-" + primary-key.first() + ".mid",
         ((), intersection, name + "-" + primary-key.last()),
         mark: marks,
-        stroke: ctx.settings.stroke.primary-key,
+        stroke: handle-auto(
+          ctx.settings.stroke.primary-key,
+          ctx.settings.stroke.attributes,
+        ),
       )
     })
   }
@@ -587,25 +590,32 @@
 
     polygon(
       coordinates,
-      4,
-      radius: if not is-array and label != none { measure(label).width * 0.5 + measure(label).height } else { 0.5 },
+      4, // sides
+      radius: if not is-array and label != none {
+        measure(label).width * 0.5 + measure(label).height
+      } else {
+        0.5
+      },
       name: name,
       ..polygon-args,
     )
+
+    // print the label
+    let label-args = (
+      padding: 1.7em,
+    )
+    let label-str = ""
     if is-array {
-      content(
-        (),
-        anchor: label.at(1),
-        padding: 1.7em,
-        label.at(0),
-      )
+      label-args.insert("anchor", label.at(1))
+      label-str = (ctx.settings.text.relations)(label.at(0))
     } else {
-      content(
-        (),
-        padding: 1.7em,
-        align(center, (ctx.settings.text.relations)(label)),
-      )
+      label-str = align(center, (ctx.settings.text.relations)(label))
     }
+    content(
+      (),
+      ..label-args,
+      label-str,
+    )
 
     set-style(
       line: (

@@ -216,9 +216,9 @@
       )
   )
 
-  dimensions = (longest / dimensions-coefficient, longest)
+  let dimensions = (longest / dimensions-coefficient, longest)
   if is-y {
-    dimensions = (dimensions.at(1), dimensions.at(0))
+    let dimensions = (dimensions.at(1), dimensions.at(0))
   }
 
   let rel-dict = (
@@ -250,11 +250,13 @@
 
     circle(
       "comp-attr.end",
-      fill: if ctx.settings.fill.composite-attributes == auto {
-        handle-auto(page.fill, white)
-      } else {
-        ctx.settings.fill.composite-attributes
-      },
+      fill: handle-auto(
+        ctx.settings.fill.composite-attributes,
+        handle-auto(
+          ctx.settings.fill.entities,
+          page.fill,
+        ),
+      ),
       stroke: handle-auto(
         ctx.settings.stroke.composite-attributes,
         ctx.settings.stroke.attributes,

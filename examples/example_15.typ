@@ -4,21 +4,7 @@
 
 #set text(font: "Titillium Web")
 
-#show: db.dati-basati.with(
-  fill: (
-    entities: rgb("#0f84eb"),
-    relations: rgb("#ffd690"),
-    cardinality: rgb("#a4c0d9"),
-  ),
-  stroke: (
-    entities: rgb("#164194"),
-    relations: rgb("#a2711d"),
-    cardinality: rgb("#a4c0d9"),
-  ),
-  text: (
-    entities: l => text(size: 1.2em, weight: "bold", upper(l)),
-  ),
-)
+#show: db.dati-basati.with(..db.themes.gali)
 
 #let entities = (
   "student": (

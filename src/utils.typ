@@ -141,6 +141,7 @@
   return updated-dict
 }
 
+/// If first is auto, then use second; otherwise first.
 #let handle-auto(default, value) = {
   if default == auto { value } else { default }
 }

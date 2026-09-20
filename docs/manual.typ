@@ -827,7 +827,7 @@ The theme schema is as follows:
     weak-entity: auto, // auto inherits primary-key
     cardinality: auto, // auto = page fill
     hierarchy: auto, // auto inherits cardinality
-    composite-attributes: auto, // auto inherits cardinality
+    composite-attributes: auto, // auto inherits entities
   ),
   stroke: (
     entities: black,
@@ -894,7 +894,7 @@ The theme schema is as follows:
 You can override single settings:
 ```typ
 #import "@preview/dati-basati:0.1.1" as db
-#show: db.with(..db.themes.at("theme-name"),entities: (fill: green))
+#show: db.with(..db.themes.at("theme-name"), entities: (fill: green))
 ```
 
 Or create new themes following the schema:
@@ -1296,7 +1296,6 @@ Since the package is based on #link("https://github.com/cetz-package/cetz", "CeT
     cardinality: ("(1,1)", "(1,n)"),
   ),
 )
-#db.themes.keys().sorted()
 #let font-per-theme = (
   db
     .themes
@@ -1304,6 +1303,8 @@ Since the package is based on #link("https://github.com/cetz-package/cetz", "CeT
     .sorted()
     .zip(
       (
+        "Libertinus Serif",
+        "Libertinus Serif",
         "Libertinus Serif",
         "Libertinus Serif",
         "Libertinus Serif",
@@ -1323,7 +1324,7 @@ Since the package is based on #link("https://github.com/cetz-package/cetz", "CeT
     .keys()
     .sorted()
     .zip(
-      ("#ccd5e0", "#ffffff", "#dfcdcd", "#fffcf3", "#d4e2e8", "#ffffff", "#fffcf3", "#ffffff", "#eae6ee"),
+      ("#ccd5e0", "#ffffff", "ffffff", "dfcdcd", "#dde9f4", "#fffcf3", "#d4e2e8", "#ffffff", "#fffcf3", "#ffffff", "#eae6ee"),
     )
     .to-dict()
 )

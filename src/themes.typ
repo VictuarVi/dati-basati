@@ -1,4 +1,74 @@
 #let themes = (
+  "default": (
+    fill: (
+      entities: none,
+      relations: none,
+      composite-attributes: auto,
+      primary-key: black,
+      weak-entity: auto,
+      cardinality: auto,
+      hierarchy: auto,
+    ),
+    stroke: (
+      entities: black,
+      relations: black,
+      attributes: black,
+      composite-attributes: auto,
+      primary-key: auto,
+      weak-entity: auto,
+      cardinality: none,
+      hierarchy: auto,
+      lines: auto,
+    ),
+    radius: (
+      entities: 0pt,
+      cardinality: 0pt,
+      hierarchy: auto,
+    ),
+    spacing: (
+      in-between: (x: 1.2em, y: 1.2em),
+      padding: 1.2em,
+    ),
+    text: (
+      entities: l => {
+        set par(leading: 0.35em)
+        text(
+          top-edge: "bounds",
+          size: 1.5em,
+          weight: "bold",
+          smallcaps(lower(l)),
+        )
+      },
+      relations: l => l,
+      attributes: l => l,
+      cardinality: l => text(top-edge: "bounds", bottom-edge: "bounds", l),
+      hierarchy: auto,
+    ),
+    attributes-position: (
+      "north": (
+        alignment: left,
+        dir: "ltr",
+        start: "from-short",
+      ),
+      "east": (
+        alignment: center,
+        dir: "ltr",
+      ),
+      "south": (
+        alignment: right,
+        dir: "rtl",
+        start: "from-short",
+      ),
+      "west": (
+        alignment: center,
+        dir: "rtl",
+      ),
+    ),
+    misc: (
+      weak-entities-stroke: false,
+      relations-intersection: "|-",
+    ),
+  ),
   "tiw": (
     fill: (
       entities: rgb("#DAE8FC"),
@@ -56,8 +126,8 @@
           weight: "bold",
           upper(l),
         )
-      }
-    )
+      },
+    ),
   ),
   "tiramisu": (
     fill: (
@@ -66,7 +136,7 @@
       relations: rgb("#8C1007").lighten(30%),
       attributes: rgb("#8C1007"),
       weak-entity: rgb("#8C1007"),
-      composite-attributes: rgb("#FFF0C4"),
+      // composite-attributes: rgb("#FFF0C4"),
       primary-key: rgb("#8C1007"),
     ),
     stroke: (
@@ -220,7 +290,7 @@
       relations: rgb("5db299"),
       cardinality: rgb("#ff809d"),
       weak-entity: rgb("#5db299"),
-      primary-key: rgb("#5db299"),
+      // primary-key: rgb("#5db299"),
     ),
     radius: (
       entities: 5pt,
@@ -254,5 +324,20 @@
       ),
     ),
     spacing: (in-between: (x: 1.2em, y: 1.3em), padding: 12.7pt),
+  ),
+  "gali": (
+    fill: (
+      entities: rgb("#0f84eb"),
+      relations: rgb("#ffd690"),
+      cardinality: rgb("#a4c0d9"),
+    ),
+    stroke: (
+      entities: rgb("#164194"),
+      relations: rgb("#a2711d"),
+      cardinality: rgb("#a4c0d9"),
+    ),
+    text: (
+      entities: l => text(size: 1.2em, weight: "bold", upper(l)),
+    ),
   ),
 )
